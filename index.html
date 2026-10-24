@@ -899,7 +899,7 @@
     <!-- Panel 1: 一日光影 -->
     <div class="panel active" id="panel-day">
       <div class="day-row">
-        <button type="button" id="day-play" class="play" title="播放一日光影變化">▶</button>
+        <button type="button" id="day-play" class="play active" title="播放一日光影變化">❚❚</button>
         <output id="clock-output">12:00</output>
         <input id="day-slider" type="range" min="0" max="1439" value="720" aria-label="校園時間軸">
       </div>
@@ -4304,7 +4304,7 @@ async function initBaliIslandsApp(initialLabels) {
   let sideMode = "trails";
   let isBirdView = false;
   let isPaused = false;
-  let isDayPlaying = false;
+  let isDayPlaying = true;
   let dayMinutes = 720;
   let tourTimer = null;
   let tourIndex = 0;
