@@ -28,57 +28,71 @@
     pointer-events: none;
   }
   .gold-btn {
-    background: linear-gradient(135deg, rgba(212,175,55,0.18), rgba(153,122,0,0.18));
-    border: 1.5px solid #d4af37;
+    background: linear-gradient(135deg, #4a1015 0%, #2c070a 100%);
+    border: 2px solid #d4af37;
     color: #fdf5c9;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    box-shadow: 0 0 12px rgba(212,175,55,0.25), inset 0 0 6px rgba(212,175,55,0.2);
-    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.55), 0 0 12px rgba(212,175,55,0.35);
     outline: none;
   }
   .gold-btn:hover {
     background: linear-gradient(to right, #e8c678, #d4af37);
     color: #3a0a0d;
     text-shadow: none;
-    box-shadow: 0 0 18px rgba(212,175,55,0.65);
+    box-shadow: 0 0 18px rgba(212,175,55,0.75);
   }
 </style>
 
-<button onclick="showMapView()" class="gold-btn fixed top-4 right-4 md:top-7 md:right-8 px-4 py-2 md:px-5 md:py-2.5 rounded-full transition-all duration-300 font-bold tracking-wider z-50 flex items-center gap-2 group cursor-pointer">
+<!-- 置頂返回 3D 群島按鈕（同時完美覆蓋嵌入式 GAS 右上角按鈕位置，點擊瞬間切回 3D 群島） -->
+<button onclick="showMapView()" class="gold-btn fixed top-3 right-3 md:top-6 md:right-6 px-5 py-2.5 md:px-6 md:py-3 rounded-full transition-all duration-300 font-bold tracking-wider z-[9999] flex items-center gap-2 group cursor-pointer">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
     <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
   </svg>
   <span class="text-sm md:text-base">回 3D 學習步道群島</span>
 </button>
 
-<header class="text-center pt-12 pb-6 relative z-10 w-full">
-  <div class="text-xs tracking-[0.35em] text-yellow-300/80 mb-2 font-mono">BALI NEW EDUCATION</div>
-  <h1 class="text-3xl md:text-5xl font-bold tracking-widest flex items-center justify-center gap-5">
-    <span class="gold-text">八里新育</span>
-    <div class="w-3 h-3 bg-yellow-400 rotate-45 shadow-[0_0_10px_#fdf2cd]"></div>
-    <span class="gold-text">課程推手</span>
-  </h1>
-  <div class="mt-4 mx-auto w-3/4 max-w-2xl h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></div>
-</header>
+<!-- 模式 A：外部獨立部署模式 (GitHub Pages / Google Sites) 直接無縫嵌入「八里新育 課程推手」GAS 應用程式 -->
+<div id="team-iframe-wrap" style="display: none; width: 100%; height: 100dvh; overflow: hidden;">
+  <iframe id="team-gas-iframe"
+          title="八里新育 課程推手"
+          style="width: 100%; height: 100dvh; border: 0; display: block; background: transparent;"
+          allow="fullscreen"></iframe>
+</div>
 
-<main class="container mx-auto px-4 mt-8 pb-16 relative z-10 w-full">
-  <div id="people-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-10 gap-x-4 place-items-center">
-    <div class="text-gray-300 text-center col-span-full mt-10">
-      <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-yellow-500 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      正在從雲端硬碟讀取課程推手資料...
+<!-- 模式 B：GAS 單一專案內部原生渲染容器 -->
+<div id="team-native-wrap">
+  <header class="text-center pt-12 pb-6 relative z-10 w-full">
+    <div class="text-xs tracking-[0.35em] text-yellow-300/80 mb-2 font-mono">BALI NEW EDUCATION</div>
+    <h1 class="text-3xl md:text-5xl font-bold tracking-widest flex items-center justify-center gap-5">
+      <span class="gold-text">八里新育</span>
+      <div class="w-3 h-3 bg-yellow-400 rotate-45 shadow-[0_0_10px_#fdf2cd]"></div>
+      <span class="gold-text">課程推手</span>
+    </h1>
+    <div class="mt-4 mx-auto w-3/4 max-w-2xl h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></div>
+  </header>
+
+  <main class="container mx-auto px-4 mt-8 pb-16 relative z-10 w-full">
+    <div id="people-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-10 gap-x-4 place-items-center">
+      <div class="text-gray-300 text-center col-span-full mt-10">
+        <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-yellow-500 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        正在從雲端硬碟讀取課程推手資料...
+      </div>
     </div>
-  </div>
-  <div class="text-right mt-12 mr-8 text-sm text-gray-300 opacity-80 tracking-widest">
-    優質團隊成員陸續增加中
-  </div>
-</main>
+    <div class="text-right mt-12 mr-8 text-sm text-gray-300 opacity-80 tracking-widest">
+      優質團隊成員陸續增加中
+    </div>
+  </main>
 
-<div class="footer-gradient"></div>
+  <div class="footer-gradient"></div>
+</div>
 
 <script>
+  // ★「八里新育 課程推手」專屬 GAS 部署網址
+  window.BALI_DESIGNER_GAS_URL = "https://script.google.com/macros/s/AKfycby2dh4pUqkInL9oYg_5Im22sQPIs5q9wzraNHFORujftaqVH0dgDrm7Hg0rUW_el6K3eg/exec";
+
   function createPersonCard(person) {
     const fallbackSvg = "data:image/svg+xml;utf8," + encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="150" height="150" fill="#5b0f15"/><circle cx="75" cy="58" r="26" fill="#e8c678"/><path d="M30 135 C30 98 120 98 120 135" fill="#e8c678"/></svg>`
@@ -125,7 +139,7 @@
   }
 
   function loadTeamData() {
-    // 1. 若在 GAS 環境中，優先透過 google.script.run 讀取
+    // 1. 若在 GAS 內部環境中，優先透過 google.script.run 直接呼叫 getDesignerData()
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run
         .withSuccessHandler(function(result) {
@@ -142,19 +156,22 @@
       return;
     }
 
-    // 2. 若在獨立 HTML / Google Sites 嵌入程式碼模式，嘗試透過 GAS API 網址讀取
-    const gasApiUrl = window.BALI_GAS_EXEC_URL || "https://script.google.com/macros/s/AKfycbx29ra5zjIh2my_JdlRpepuHoYblCUPiEyROwjaKpei4YmzTm5fEheW16j31h1JhL0G/exec";
-    fetch(gasApiUrl + "?action=api")
-      .then(r => r.json())
-      .then(res => {
-        if (res && res.status === "success" && Array.isArray(res.team)) {
-          renderData(res.team);
-        } else {
-          throw new Error("尚無回傳團隊資料");
-        }
-      })
-      .catch(() => {
-        showError("目前為獨立預覽模式。部署更新後的「程式碼.gs」至 Google Apps Script 後，即可自動從雲端硬碟「新育幸福學校 / designer」試算表載入最新團隊成員與照片！");
-      });
+    // 2. 若在 GitHub Pages / Google Sites 獨立嵌入環境中：
+    // 直接無縫載入您已開啟 ALLOWALL 權限的「課程推手 GAS 網頁應用程式」，零需修改 GAS 後端即可即時讀取雲端硬碟 designer 試算表與照片！
+    const nativeWrap = document.getElementById('team-native-wrap');
+    const iframeWrap = document.getElementById('team-iframe-wrap');
+    const iframe = document.getElementById('team-gas-iframe');
+    const viewTeam = document.getElementById('view-team');
+    if (nativeWrap && iframeWrap && iframe) {
+      nativeWrap.style.display = 'none';
+      iframeWrap.style.display = 'block';
+      if (viewTeam) {
+        viewTeam.style.overflow = 'hidden';
+        viewTeam.style.paddingBottom = '0';
+      }
+      if (!iframe.src) {
+        iframe.src = window.BALI_DESIGNER_GAS_URL;
+      }
+    }
   }
 </script>
