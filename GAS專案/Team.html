@@ -1,0 +1,160 @@
+<style>
+  .gold-text {
+    background: linear-gradient(to bottom, #fdf5c9, #d4af37, #997a00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+  .gold-ribbon {
+    background: linear-gradient(to right, #e8c678, #fdf2cd 20%, #d4af37 80%, #b8860b);
+    clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%);
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+    position: relative;
+    z-index: 1;
+    margin-left: -15px;
+    padding: 10px 30px 10px 25px;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .footer-gradient {
+    background: linear-gradient(to top, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 100%);
+    height: 40px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+  }
+  .gold-btn {
+    background: linear-gradient(135deg, rgba(212,175,55,0.18), rgba(153,122,0,0.18));
+    border: 1.5px solid #d4af37;
+    color: #fdf5c9;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    box-shadow: 0 0 12px rgba(212,175,55,0.25), inset 0 0 6px rgba(212,175,55,0.2);
+    backdrop-filter: blur(6px);
+    outline: none;
+  }
+  .gold-btn:hover {
+    background: linear-gradient(to right, #e8c678, #d4af37);
+    color: #3a0a0d;
+    text-shadow: none;
+    box-shadow: 0 0 18px rgba(212,175,55,0.65);
+  }
+</style>
+
+<button onclick="showMapView()" class="gold-btn fixed top-4 right-4 md:top-7 md:right-8 px-4 py-2 md:px-5 md:py-2.5 rounded-full transition-all duration-300 font-bold tracking-wider z-50 flex items-center gap-2 group cursor-pointer">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+  </svg>
+  <span class="text-sm md:text-base">回 3D 學習步道群島</span>
+</button>
+
+<header class="text-center pt-12 pb-6 relative z-10 w-full">
+  <div class="text-xs tracking-[0.35em] text-yellow-300/80 mb-2 font-mono">BALI NEW EDUCATION</div>
+  <h1 class="text-3xl md:text-5xl font-bold tracking-widest flex items-center justify-center gap-5">
+    <span class="gold-text">八里新育</span>
+    <div class="w-3 h-3 bg-yellow-400 rotate-45 shadow-[0_0_10px_#fdf2cd]"></div>
+    <span class="gold-text">課程推手</span>
+  </h1>
+  <div class="mt-4 mx-auto w-3/4 max-w-2xl h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></div>
+</header>
+
+<main class="container mx-auto px-4 mt-8 pb-16 relative z-10 w-full">
+  <div id="people-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-10 gap-x-4 place-items-center">
+    <div class="text-gray-300 text-center col-span-full mt-10">
+      <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-yellow-500 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      正在從雲端硬碟讀取課程推手資料...
+    </div>
+  </div>
+  <div class="text-right mt-12 mr-8 text-sm text-gray-300 opacity-80 tracking-widest">
+    優質團隊成員陸續增加中
+  </div>
+</main>
+
+<div class="footer-gradient"></div>
+
+<script>
+  function createPersonCard(person) {
+    const fallbackSvg = "data:image/svg+xml;utf8," + encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="150" height="150" fill="#5b0f15"/><circle cx="75" cy="58" r="26" fill="#e8c678"/><path d="M30 135 C30 98 120 98 120 135" fill="#e8c678"/></svg>`
+    );
+    const imgUrl = person.image ? person.image : fallbackSvg;
+    return `
+      <div class="flex items-center w-full max-w-[280px] transform transition duration-300 hover:scale-105">
+        <div class="relative w-[110px] h-[110px] flex-shrink-0 z-10">
+          <img src="${imgUrl}" alt="${person.name}"
+               class="w-full h-full object-cover rounded-full shadow-lg border-2 border-[#e8c678]"
+               onerror="this.src='${fallbackSvg}'">
+        </div>
+        <div class="gold-ribbon flex-1">
+          <div class="text-[#3a0a0d] font-bold text-lg leading-tight tracking-wide whitespace-nowrap">
+            ${person.name}
+          </div>
+          <div class="text-[#5b0f15] font-medium text-sm mt-0.5 tracking-wider whitespace-nowrap opacity-90">
+            ${person.title}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderData(dataArray) {
+    const grid = document.getElementById('people-grid');
+    grid.innerHTML = '';
+    if (!dataArray || dataArray.length === 0) {
+      grid.innerHTML = '<div class="col-span-full text-center text-gray-300 mt-10">目前沒有人員資料</div>';
+      return;
+    }
+    dataArray.forEach(person => {
+      grid.innerHTML += createPersonCard(person);
+    });
+  }
+
+  function showError(msg) {
+    document.getElementById('people-grid').innerHTML = `
+      <div class="col-span-full text-center text-amber-200 bg-black/35 p-6 rounded-xl border border-yellow-600/50 mt-10 max-w-lg">
+        <div class="text-lg font-bold mb-2">✨ 課程推手團隊資料連線提示</div>
+        <div class="text-sm opacity-90 leading-relaxed">${msg}</div>
+      </div>
+    `;
+  }
+
+  function loadTeamData() {
+    // 1. 若在 GAS 環境中，優先透過 google.script.run 讀取
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(result) {
+          if (result && result.status === "success") {
+            renderData(result.data);
+          } else {
+            showError(result ? result.message : "讀取失敗");
+          }
+        })
+        .withFailureHandler(function(error) {
+          showError(error.message || String(error));
+        })
+        .getDesignerData();
+      return;
+    }
+
+    // 2. 若在獨立 HTML / Google Sites 嵌入程式碼模式，嘗試透過 GAS API 網址讀取
+    const gasApiUrl = window.BALI_GAS_EXEC_URL || "https://script.google.com/macros/s/AKfycbx29ra5zjIh2my_JdlRpepuHoYblCUPiEyROwjaKpei4YmzTm5fEheW16j31h1JhL0G/exec";
+    fetch(gasApiUrl + "?action=api")
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.status === "success" && Array.isArray(res.team)) {
+          renderData(res.team);
+        } else {
+          throw new Error("尚無回傳團隊資料");
+        }
+      })
+      .catch(() => {
+        showError("目前為獨立預覽模式。部署更新後的「程式碼.gs」至 Google Apps Script 後，即可自動從雲端硬碟「新育幸福學校 / designer」試算表載入最新團隊成員與照片！");
+      });
+  }
+</script>
