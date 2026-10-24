@@ -862,8 +862,8 @@
     <div class="tool-group" role="group" aria-label="3D 檢視切換">
       <button type="button" id="tg-flows" aria-pressed="true" title="顯示或隱藏跨島課程連結光軌">🔗 跨域線</button>
       <button type="button" id="tg-tour" aria-pressed="false" title="自動環島巡禮導覽">🚀 巡禮</button>
-      <button type="button" id="tg-bird" aria-pressed="false" title="切換俯瞰或立體視角">🦅 俯瞰</button>
-      <button type="button" id="tg-freeze" aria-pressed="false" title="暫停或恢復動態效果">⏸ 暫停</button>
+      <button type="button" id="tg-bird" aria-pressed="false" title="切換俯瞰或立體視角">🐦 俯瞰</button>
+      <button type="button" id="tg-freeze" aria-pressed="false" title="暫停或恢復動態效果">✋ 暫停</button>
     </div>
   </div>
 
@@ -4435,7 +4435,7 @@ async function initBaliIslandsApp(initialLabels) {
   });
   $("#day-play").addEventListener("click", () => {
     isDayPlaying = !isDayPlaying;
-    $("#day-play").textContent = isDayPlaying ? "⏸" : "▶";
+    $("#day-play").textContent = isDayPlaying ? "❚❚" : "▶";
     $("#day-play").classList.toggle("active", isDayPlaying);
   });
   $$("[data-time]").forEach(btn => {
