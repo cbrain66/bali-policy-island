@@ -175,42 +175,36 @@
     letter-spacing: 2px;
     text-transform: uppercase;
   }
-  .brand .future {
-    pointer-events: auto;
-    text-decoration: none;
-    font: 900 clamp(22px, 2.5vw, 34px) / 0.95 "Arial Black", Impact, sans-serif;
-    letter-spacing: -1px;
-    color: var(--coral);
-    display: inline-block;
-  }
-  .brand .future span {
-    display: block;
-    color: var(--ink);
-    font-size: 0.72em;
-    letter-spacing: 1px;
-    margin-top: 2px;
-  }
   .brand h1 {
-    font-size: 18px;
+    pointer-events: auto;
+    cursor: pointer;
+    font-size: clamp(22px, 2.2vw, 30px);
     font-weight: 900;
-    letter-spacing: 3px;
-    margin: 10px 0 0;
+    letter-spacing: 2px;
+    line-height: 1.25;
+    margin: 0;
+    color: var(--ink);
+    text-shadow: 0 2px 10px rgba(255, 248, 244, 0.85);
+  }
+  .brand h1 em {
+    font-style: normal;
+    font-weight: 900;
+    color: var(--coral);
+    letter-spacing: 1px;
+    margin: 0 4px;
   }
   .brand .candidate {
-    font-size: 12px;
-    margin: 5px 0 0;
+    font-size: clamp(13px, 1.15vw, 15.5px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 7px 0 0;
     color: var(--muted);
-  }
-  .brand .candidate em {
-    font-style: normal;
-    font-weight: 800;
-    color: var(--coral);
-    margin-right: 4px;
+    text-shadow: 0 1px 6px rgba(255, 248, 244, 0.85);
   }
   .hero-note {
     position: absolute;
     left: 28px;
-    top: 168px;
+    top: 118px;
     max-width: none;
     pointer-events: none;
     z-index: 3;
@@ -825,12 +819,9 @@
 
   <!-- 左上品牌標題 -->
   <header class="brand">
-    <a class="future" href="#" onclick="window.resetIslandCamera && window.resetIslandCamera(); return false;">
-      BALI <span>NEW EDU.</span>
-    </a>
     <div class="brand-r">
-      <h1>八里新育</h1>
-      <p class="candidate"><em>14 ISLANDS</em>學習步道群島</p>
+      <h1 onclick="window.resetIslandCamera && window.resetIslandCamera(); return false;">八里新育 <em>14 ISLANDS</em> 學習步道群島</h1>
+      <p class="candidate">新的教育 心的教育 欣的教育 馨的教育</p>
     </div>
   </header>
 
