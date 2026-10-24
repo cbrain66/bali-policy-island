@@ -2065,32 +2065,89 @@ function buildIslandDiorama(THREE, kit, trail, center, animators) {
 
   if (t === "baseball") {
     // =========================================================
-    // ★ 01 紅土修練揮擊未來：投手投球 ＋ 打者揮棒擊出全壘打動態劇場
+    // ★ 01 紅土修練揮擊未來：90° 扇形棒球場 ＋ 投手投球、打者揮棒全壘打動態劇場
     // =========================================================
-    kit.addPart("cyl", [cx, TOP_Y + 0.02, cz + 0.1], [1.9, 0.03, 1.9], 0xc97252);
-    kit.addPart("cyl", [cx, TOP_Y + 0.035, cz - 0.05], [0.34, 0.04, 0.34], 0xd98a6c); // 投手丘
-    for (const [bx, bz] of [[0, 0.68], [0.58, 0.1], [0, -0.52], [-0.58, 0.1]]) {
-      kit.addPart("box", [cx + bx, TOP_Y + 0.04, cz + bz], [0.12, 0.03, 0.12], 0xffffff, [0, Math.PI / 4, 0]);
-    }
-    // 本壘護網與球員休息區
-    kit.addPart("rbox", [cx, TOP_Y + 0.32, cz + 0.98], [0.92, 0.54, 0.06], 0x3b4248);
-    kit.addPart("rbox", [cx - 0.84, TOP_Y + 0.2, cz + 0.45], [0.26, 0.32, 0.62], 0xa94b5c, [0, 0.5, 0]);
-    kit.addPart("rbox", [cx + 0.84, TOP_Y + 0.2, cz + 0.45], [0.26, 0.32, 0.62], 0xa94b5c, [0, -0.5, 0]);
-    // 外野計分板
-    kit.addPart("rbox", [cx, TOP_Y + 0.48, cz - 0.92], [1.05, 0.56, 0.1], 0x264636);
-    kit.addPart("box", [cx, TOP_Y + 0.52, cz - 0.86], [0.85, 0.32, 0.02], 0xffe699, [0, 0, 0], true);
+    const apexZ = cz + 0.82; // 扇形棒球場本壘頂點
 
-    // 1. 投手小學生（站在投手丘朝本壘投球）
+    // 輔助函式：建立標準 90° 扇形棒球場圖層（頂點朝向本壘，圓弧朝向外野）
+    function addBaseballFan(radius, thickness, colorHex, yOffset = 0.01) {
+      const shape = new THREE.Shape();
+      shape.moveTo(0, 0);
+      shape.absarc(0, 0, radius, Math.PI * 0.25, Math.PI * 0.75, false);
+      shape.lineTo(0, 0);
+      const geom = new THREE.ExtrudeGeometry(shape, { depth: thickness, bevelEnabled: false, curveSegments: 32 });
+      const mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.82 });
+      const mesh = new THREE.Mesh(geom, mat);
+      mesh.rotation.x = -Math.PI / 2;
+      mesh.position.set(cx, TOP_Y + yOffset, apexZ);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      if (islandGroup) {
+        mesh.userData = { type: "island", id: trail.id };
+        islandGroup.add(mesh);
+      }
+      return mesh;
+    }
+
+    // 1. 第一層：90° 扇形外野紅土警戒區（半徑 1.96）
+    addBaseballFan(1.96, 0.024, 0xc46847, 0.01);
+    // 2. 第二層：90° 扇形翠綠外野草皮（半徑 1.76）
+    addBaseballFan(1.76, 0.032, 0x56984d, 0.01);
+    // 3. 第三層：90° 扇形紅土內野區（半徑 1.08）
+    addBaseballFan(1.08, 0.040, 0xc97252, 0.01);
+    // 本壘圓形紅土打擊區與投手丘
+    kit.addPart("cyl", [cx, TOP_Y + 0.03, apexZ - 0.04], [0.38, 0.04, 0.38], 0xc97252);
+    kit.addPart("cyl", [cx, TOP_Y + 0.055, apexZ - 0.62], [0.30, 0.045, 0.30], 0xd98a6c); // 投手丘
+
+    // 4. 一壘線與三壘線（±45° 白色邊線）＋ 左右外野黃色全壘打標竿
+    for (const sign of [-1, 1]) {
+      const ang = sign * (Math.PI / 4);
+      const lineLen = 1.94;
+      const midX = cx + Math.sin(ang) * (lineLen * 0.5);
+      const midZ = apexZ - Math.cos(ang) * (lineLen * 0.5);
+      kit.addPart("box", [midX, TOP_Y + 0.054, midZ], [0.032, 0.01, lineLen], 0xffffff, [0, -ang, 0]);
+      // 外野兩端黃色全壘打標竿 (Foul Poles)
+      const poleX = cx + Math.sin(ang) * 1.92;
+      const poleZ = apexZ - Math.cos(ang) * 1.92;
+      kit.addPart("cyl", [poleX, TOP_Y + 0.30, poleZ], [0.035, 0.56, 0.035], 0xf5c832);
+    }
+
+    // 5. 扇形圓弧外野全壘打護牆（沿著半徑 1.94 圓弧排列）
+    const wallSegs = 9;
+    for (let i = 0; i < wallSegs; i++) {
+      const a = Math.PI * 0.27 + (i / (wallSegs - 1)) * (Math.PI * 0.46);
+      const wx = cx + Math.cos(a) * 1.94;
+      const wz = apexZ - Math.sin(a) * 1.94;
+      const rotY = a - Math.PI / 2;
+      kit.addPart("rbox", [wx, TOP_Y + 0.14, wz], [0.36, 0.22, 0.06], 0x264e36, [0, rotY, 0]);
+      kit.addPart("box", [wx, TOP_Y + 0.26, wz], [0.36, 0.03, 0.065], 0xf5c832, [0, rotY, 0]);
+    }
+
+    // 6. 四個白色壘包（本壘、一壘、二壘、三壘）
+    for (const [bx, bz] of [[0, -0.08], [0.54, -0.62], [0, -1.14], [-0.54, -0.62]]) {
+      kit.addPart("box", [cx + bx, TOP_Y + 0.056, apexZ + bz], [0.11, 0.025, 0.11], 0xffffff, [0, Math.PI / 4, 0]);
+    }
+
+    // 7. 本壘後方護網、一三壘側球員休息室與外野計分板
+    kit.addPart("rbox", [cx, TOP_Y + 0.26, apexZ + 0.22], [0.76, 0.44, 0.05], 0x3b4248);
+    kit.addPart("rbox", [cx - 0.78, TOP_Y + 0.18, apexZ - 0.36], [0.22, 0.28, 0.54], 0xa94b5c, [0, Math.PI / 4, 0]);
+    kit.addPart("rbox", [cx + 0.78, TOP_Y + 0.18, apexZ - 0.36], [0.22, 0.28, 0.54], 0xa94b5c, [0, -Math.PI / 4, 0]);
+    // 中外野弧頂後方大型計分板
+    kit.addPart("rbox", [cx, TOP_Y + 0.50, apexZ - 2.02], [0.96, 0.52, 0.09], 0x264636);
+    kit.addPart("box", [cx, TOP_Y + 0.53, apexZ - 1.96], [0.78, 0.30, 0.02], 0xffe699, [0, 0, 0], true);
+
+    // 8. 投手小學生（站在扇形中央投手丘朝本壘投球）
+    const moundZ = apexZ - 0.62;
+    const homeZ = apexZ - 0.08;
     const pitcher = kit.makeActor({
-      x: cx, z: cz - 0.05, ry: 0, scale: 0.98,
+      x: cx, z: moundZ, ry: 0, scale: 0.96,
       shirt: 0xffffff, bottom: 0xffffff, hat: "cap", hatColor: 0xa94b5c
     });
-    // 2. 打者小學生（站在本壘右側握棒準備揮擊）
+    // 9. 打者小學生（站在本壘打擊區握棒準備揮擊）
     const batter = kit.makeActor({
-      x: cx - 0.18, z: cz + 0.66, ry: Math.PI * 0.55, scale: 0.98,
+      x: cx - 0.16, z: homeZ, ry: Math.PI * 0.55, scale: 0.96,
       shirt: 0xa94b5c, bottom: 0xffffff, hat: "cap", hatColor: 0x211d1d
     });
-    // 打者手中的木球棒
     const batPivot = new THREE.Group();
     batPivot.position.set(0, -0.075, 0.02);
     const batMesh = new THREE.Mesh(
@@ -2101,32 +2158,28 @@ function buildIslandDiorama(THREE, kit, trail, center, animators) {
     batPivot.add(batMesh);
     batter.armR.add(batPivot);
 
-    // 3. 飛行的白色棒球
-    const ballMesh = kit.addPart("sphere", [cx, TOP_Y + 0.25, cz - 0.05], [0.075, 0.075, 0.075], 0xffffff);
+    // 10. 飛行的白色棒球
+    const ballMesh = kit.addPart("sphere", [cx, TOP_Y + 0.25, moundZ], [0.075, 0.075, 0.075], 0xffffff);
 
     animators.push((dt, el) => {
-      // 2.4 秒完成一次「抬臂投球 → 球飛向本壘 → 強力揮棒 → 全壘打高飛弧線」循環
       const cycle = (el * 0.45) % 1;
       if (cycle < 0.22) {
-        // 階段 1：投手抬腿舉臂準備投球
         const p = cycle / 0.22;
         pitcher.armR.rotation.x = -p * 2.5;
         pitcher.legL.rotation.x = -Math.sin(p * Math.PI) * 0.7;
         pitcher.bodyG.rotation.x = p * 0.25;
-        ballMesh.position.set(cx - 0.07, TOP_Y + 0.26 + p * 0.08, cz - 0.05);
+        ballMesh.position.set(cx - 0.07, TOP_Y + 0.26 + p * 0.08, moundZ);
         batter.armR.rotation.set(-0.8, 0, -0.5);
         batter.bodyG.rotation.y = -0.35;
       } else if (cycle < 0.46) {
-        // 階段 2：棒球高速飛向本壘板
         const p = (cycle - 0.22) / 0.24;
         pitcher.armR.rotation.x = -2.5 + p * 3.6;
         pitcher.bodyG.rotation.x = 0.25 - p * 0.5;
         ballMesh.position.set(
           cx - 0.07 + p * 0.05,
           TOP_Y + 0.32 - Math.sin(p * Math.PI) * 0.04,
-          (cz - 0.05) + p * 0.71
+          moundZ + p * (homeZ - moundZ)
         );
-        // 打者蓄力準備揮棒
         if (p > 0.65) {
           const sp = (p - 0.65) / 0.35;
           batter.bodyG.rotation.y = -0.35 + sp * 1.9;
@@ -2134,7 +2187,6 @@ function buildIslandDiorama(THREE, kit, trail, center, animators) {
           batPivot.rotation.x = Math.PI * 0.42;
         }
       } else {
-        // 階段 3：鏗！打者揮棒擊中，棒球畫出高空全壘打拋物線飛向外野！
         const p = (cycle - 0.46) / 0.54;
         pitcher.armR.rotation.x = 0;
         pitcher.bodyG.rotation.x = 0;
@@ -2142,9 +2194,9 @@ function buildIslandDiorama(THREE, kit, trail, center, animators) {
         batter.armR.rotation.set(-0.9, 1.8, -1.1);
         batPivot.rotation.x = Math.PI * 0.42;
         ballMesh.position.set(
-          cx - 0.02 + p * 0.35,
+          cx - 0.02 + p * 0.32,
           TOP_Y + 0.28 + Math.sin(p * Math.PI) * 1.25,
-          (cz + 0.66) - p * 1.65
+          homeZ - p * 1.95
         );
       }
     });
