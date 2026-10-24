@@ -2455,28 +2455,119 @@ function buildIslandDiorama(THREE, kit, trail, center, animators) {
       shirt: 0xfcea8b, bottom: 0x356b73, bagColor: 0x356b73
     });
 
-    // 頭頂雙語對話泡泡 (Speech Bubbles: A / B 交替浮現)
-    const bubbleA = kit.addPart("rbox", [cx - 0.42, TOP_Y + 0.62, cz + 0.32], [0.24, 0.13, 0.05], 0xffffff, [0, 0, 0], true);
-    const bubbleB = kit.addPart("rbox", [cx + 0.24, TOP_Y + 0.56, cz + 0.35], [0.24, 0.13, 0.05], 0xffe680, [0, 0, 0], true);
+    // ★ 頭頂具備「打字機逐字輸入效果」的英語對話框 (CanvasTexture + THREE.Sprite)
+    function makeTypewriterBubble(bgHex, borderHex, textHex) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 176;
+      const ctx = canvas.getContext("2d");
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+      const sprite = new THREE.Sprite(mat);
+      sprite.scale.set(1.22, 0.42, 1);
+      sprite.renderOrder = 20;
+      if (islandGroup) islandGroup.add(sprite);
+
+      let lastKey = "";
+      function updateText(speakerTag, fullText, charCount, showCursor) {
+        const shown = fullText.slice(0, charCount) + (showCursor ? "▋" : "");
+        const key = speakerTag + "|" + shown;
+        if (key === lastKey) return;
+        lastKey = key;
+
+        ctx.clearRect(0, 0, 512, 176);
+        // 圓角對話框背景與底部小尖角
+        const x = 14, y = 12, w = 484, h = 124, r = 26;
+        ctx.fillStyle = bgHex;
+        ctx.strokeStyle = borderHex;
+        ctx.lineWidth = 7;
+
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        // 底部對話泡泡尖角
+        ctx.lineTo(278, y + h);
+        ctx.lineTo(256, y + h + 28);
+        ctx.lineTo(234, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // 左上角說話者小標籤
+        ctx.font = "800 22px 'Segoe UI', 'Noto Sans TC', sans-serif";
+        ctx.fillStyle = borderHex;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText(speakerTag, 38, 26);
+
+        // 英語打字機文字內容
+        ctx.font = "800 33px 'Segoe UI', Arial, sans-serif";
+        ctx.fillStyle = textHex;
+        ctx.textBaseline = "middle";
+        ctx.fillText(shown, 38, 92);
+
+        tex.needsUpdate = true;
+      }
+
+      return { sprite, updateText };
+    }
+
+    const bubbleA = makeTypewriterBubble("#ffffff", "#2b5b9e", "#162d4c");
+    bubbleA.sprite.position.set(cx - 0.42, TOP_Y + 0.72, cz + 0.32);
+
+    const bubbleB = makeTypewriterBubble("#fff9db", "#d96b27", "#4a2508");
+    bubbleB.sprite.position.set(cx + 0.28, TOP_Y + 0.64, cz + 0.35);
+
+    const dialogues = [
+      { q: "Hello! Welcome to Bali!", a: "Hi! I love Bali School!" },
+      { q: "How are you today?",      a: "We are doing great!" },
+      { q: "Let's speak English!",    a: "Yes! Welcome to Taiwan!" }
+    ];
 
     animators.push((dt, el) => {
       globe.rotation.y += dt * 0.65;
-      const turn = Math.sin(el * 2.4);
-      // 外師與學生輪流開口說話、揮手表達與開心點頭
-      if (turn > 0) {
+      // 每組對話 6 秒（前 3 秒外師打字提問，後 3 秒學生打字回答）
+      const totalCycle = el * 0.36;
+      const pairIdx = Math.floor(totalCycle) % dialogues.length;
+      const phase = totalCycle % 1; // 0..1
+      const pair = dialogues[pairIdx];
+      const cursorBlink = Math.floor(el * 4) % 2 === 0;
+
+      if (phase < 0.5) {
+        // 外師開口說話（打字機逐字浮現英語問候）
+        const subP = phase / 0.5; // 0..1
+        const chars = Math.min(pair.q.length, Math.floor(subP * (pair.q.length + 5)));
+        bubbleA.sprite.visible = true;
+        bubbleB.sprite.visible = false;
+        bubbleA.updateText("💬 Teacher", pair.q, chars, chars < pair.q.length || cursorBlink);
+        bubbleA.sprite.position.y = TOP_Y + 0.72 + Math.sin(el * 5) * 0.02;
+
         teacher.armR.rotation.x = -1.6 + Math.sin(el * 8) * 0.35;
         teacher.headG.rotation.x = Math.sin(el * 6) * 0.1;
-        bubbleA.scale.setScalar(1.0 + Math.sin(el * 6) * 0.08);
-        bubbleB.scale.setScalar(0.01);
         stu1.armR.rotation.x = 0;
         stu2.armL.rotation.x = 0;
       } else {
+        // 學生自信舉手用英語回答（打字機逐字浮現英語回應）
+        const subP = (phase - 0.5) / 0.5; // 0..1
+        const chars = Math.min(pair.a.length, Math.floor(subP * (pair.a.length + 5)));
+        bubbleA.sprite.visible = true;
+        bubbleA.updateText("💬 Teacher", pair.q, pair.q.length, false);
+        bubbleB.sprite.visible = true;
+        bubbleB.updateText("🙋 Students", pair.a, chars, chars < pair.a.length || cursorBlink);
+        bubbleB.sprite.position.y = TOP_Y + 0.64 + Math.sin(el * 5) * 0.02;
+
         teacher.armR.rotation.x = -0.3;
-        stu1.armR.rotation.x = -2.1 + Math.sin(el * 9) * 0.3; // 學生自信舉手說英語
+        stu1.armR.rotation.x = -2.1 + Math.sin(el * 9) * 0.3;
         stu2.armL.rotation.x = -1.8 + Math.cos(el * 9) * 0.3;
         stu1.bodyG.position.y = Math.abs(Math.sin(el * 6)) * 0.03;
-        bubbleA.scale.setScalar(0.01);
-        bubbleB.scale.setScalar(1.0 + Math.sin(el * 6) * 0.08);
       }
     });
 
