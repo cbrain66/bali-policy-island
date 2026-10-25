@@ -1235,7 +1235,6 @@
       ✨ 課程設計團隊
     </button>
     <button id="btn-home" title="回到群島全景">↗ 全景總覽</button>
-    <button id="btn-sidebar-toggle" title="展開或收合步道索引">☰ 步道清單</button>
     <button id="btn-help" title="操作說明">?</button>
   </nav>
 
@@ -5139,9 +5138,11 @@ async function initBaliIslandsApp(initialLabels) {
     selectIsland(null);
     resetCamera();
   });
-  $("#btn-sidebar-toggle").addEventListener("click", () => {
-    $("#sidebar").classList.toggle("open");
-  });
+  if ($("#btn-sidebar-toggle")) {
+    $("#btn-sidebar-toggle").addEventListener("click", () => {
+      $("#sidebar").classList.toggle("open");
+    });
+  }
   $("#btn-help").addEventListener("click", () => {
     $("#help-modal").hidden = false;
   });
