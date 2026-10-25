@@ -778,6 +778,111 @@
     min-height: 26px;
   }
 
+  /* 八里柚寶 磨砂玻璃校園資訊框 */
+  .mascot-info-card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(320px, calc(100vw - 32px));
+    background: rgba(24, 21, 20, 0.78);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255, 248, 240, 0.28);
+    border-radius: 18px;
+    padding: 20px 22px;
+    color: #ffffff;
+    z-index: 25;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.38);
+    animation: mascotPopIn 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .mascot-info-card[hidden] {
+    display: none !important;
+  }
+  @keyframes mascotPopIn {
+    from { opacity: 0; transform: translate(-50%, -46%) scale(0.95); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+  #island-app .mascot-info-card .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    min-height: 28px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #island-app .mascot-info-card .close-btn:hover {
+    background: var(--coral);
+    border-color: var(--coral);
+  }
+  .mascot-info-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 248, 240, 0.18);
+  }
+  .mascot-info-head img {
+    width: 34px;
+    height: 44px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  }
+  .mascot-info-head h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #ffd166;
+  }
+  .mascot-info-head p {
+    margin: 2px 0 0;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #f6ece1;
+    opacity: 0.9;
+  }
+  .mascot-stat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .mascot-stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 9px 14px;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  }
+  .mascot-stat-item span.k {
+    color: #f6ece1;
+  }
+  .mascot-stat-item span.v {
+    color: #ffd166;
+    font-weight: 900;
+    font-size: 17px;
+  }
+
   /* Help / Intro Modal */
   .modal-backdrop {
     position: absolute;
@@ -1224,6 +1329,24 @@
     <button type="button" class="close" id="card-close" title="關閉資訊卡">×</button>
     <div id="card-content"></div>
   </article>
+
+  <!-- 八里柚寶 磨砂玻璃校園資訊顯示框 -->
+  <aside id="mascot-info-card" class="mascot-info-card" hidden aria-label="八里柚寶校園資訊">
+    <button type="button" class="close-btn" id="mascot-info-close" title="關閉資訊框">×</button>
+    <div class="mascot-info-head">
+      <img id="mascot-info-img" alt="八里柚寶" src="">
+      <div>
+        <h3>八里柚寶</h3>
+        <p>校園規模與概況</p>
+      </div>
+    </div>
+    <ul class="mascot-stat-list">
+      <li class="mascot-stat-item"><span class="k">班級：</span><span class="v">26班</span></li>
+      <li class="mascot-stat-item"><span class="k">學生：</span><span class="v">611人</span></li>
+      <li class="mascot-stat-item"><span class="k">教師：</span><span class="v">54人</span></li>
+      <li class="mascot-stat-item"><span class="k">校地：</span><span class="v">2.4公頃</span></li>
+    </ul>
+  </aside>
 
   <!-- 操作說明彈窗 -->
   <div id="help-modal" class="modal-backdrop" hidden>
@@ -4467,10 +4590,14 @@ async function initBaliIslandsApp(initialLabels) {
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => [...document.querySelectorAll(s)];
 
-  // 設定左下角吉祥物大頭貼為 maimrole.png
+  // 設定左下角吉祥物大頭貼與八里柚寶磨砂玻璃資訊框圖片為 maimrole.png
   const pillImg = $("#mascot-pill-img");
   if (pillImg && typeof MAIMROLE_DATA_URI !== "undefined") {
     pillImg.src = MAIMROLE_DATA_URI;
+  }
+  const mascotInfoImg = $("#mascot-info-img");
+  if (mascotInfoImg && typeof MAIMROLE_DATA_URI !== "undefined") {
+    mascotInfoImg.src = MAIMROLE_DATA_URI;
   }
 
   // 更新總島嶼數顯示
@@ -4626,8 +4753,14 @@ async function initBaliIslandsApp(initialLabels) {
     };
   }
 
+  const mascotInfoCard = $("#mascot-info-card");
+  function hideMascotInfoCard() {
+    if (mascotInfoCard) mascotInfoCard.hidden = true;
+  }
+
   function resetCamera(duration = 0.95) {
     followMascot = false;
+    hideMascotInfoCard();
     const offset = getResponsiveCamOffset(isBirdView);
     startCameraFlight(cityCenter.clone().add(offset), cityCenter.clone(), duration);
   }
@@ -4638,15 +4771,20 @@ async function initBaliIslandsApp(initialLabels) {
 
   function toggleFollowMascot() {
     if (!mascotHero) return;
-    followMascot = !followMascot;
-    if (followMascot) {
+    const isCardOpen = mascotInfoCard && !mascotInfoCard.hidden;
+    if (!isCardOpen) {
       stopAutoTour();
+      selectIsland(null);
+      followMascot = true;
+      if (mascotInfoCard) mascotInfoCard.hidden = false;
       const mp = mascotHero.root.position.clone();
       startCameraFlight(mp.clone().add(new THREE.Vector3(0.5, 2.6, 4.5)), mp.clone().add(new THREE.Vector3(0, 0.45, 0)), 0.75);
       const curId = mascotHero.getCurrentIslandId();
       const curTrail = trails.find(x => x.id === curId);
-      $("#mascot-text").textContent = `🍊 正在跟隨「八里柚寶」3D 玩偶巡視【${curTrail ? curTrail.text : "學習步道群島"}】（再次點擊可取消跟隨）`;
+      $("#mascot-text").textContent = `🍊 正在查看「八里柚寶」校園規模資訊並跟隨巡視【${curTrail ? curTrail.text : "學習步道群島"}】`;
     } else {
+      followMascot = false;
+      hideMascotInfoCard();
       $("#mascot-text").textContent = "已解除跟隨八里柚寶，可自由旋轉縮放或點擊任一島嶼！";
       resetCamera();
     }
@@ -4756,7 +4894,10 @@ async function initBaliIslandsApp(initialLabels) {
   // 選取島嶼並彈出資訊卡
   function selectIsland(id, fly = true) {
     selectedId = id;
-    if (id) followMascot = false;
+    if (id) {
+      followMascot = false;
+      hideMascotInfoCard();
+    }
     const card = $("#detail-card");
     if (!id || !islandViews.has(id)) {
       card.hidden = true;
@@ -4833,6 +4974,12 @@ async function initBaliIslandsApp(initialLabels) {
     selectIsland(null);
     resetCamera();
   });
+  if ($("#mascot-info-close")) {
+    $("#mascot-info-close").addEventListener("click", () => {
+      hideMascotInfoCard();
+      followMascot = false;
+    });
+  }
 
   // 3D 畫布點擊偵測 (Raycaster)
   const raycaster = new THREE.Raycaster();
@@ -4848,12 +4995,26 @@ async function initBaliIslandsApp(initialLabels) {
     pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
+
+    // 優先偵測是否直接點擊 3D「八里柚寶」玩偶本體
+    if (mascotHero && mascotHero.root) {
+      const mHits = raycaster.intersectObject(mascotHero.root, true);
+      if (mHits.length > 0) {
+        toggleFollowMascot();
+        return;
+      }
+    }
+
     const hits = raycaster.intersectObjects(pickables, false);
     if (hits.length > 0) {
       const hitId = hits[0].object.userData?.id;
-      if (hitId) selectIsland(hitId, true);
-    } else if (selectedId) {
-      selectIsland(null);
+      if (hitId) {
+        hideMascotInfoCard();
+        selectIsland(hitId, true);
+      }
+    } else {
+      if (selectedId) selectIsland(null);
+      if (mascotInfoCard && !mascotInfoCard.hidden) hideMascotInfoCard();
     }
   });
 
