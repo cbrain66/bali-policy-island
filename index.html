@@ -26,11 +26,17 @@
     --cream: #fff8f4;
     --yellow: #fcea8b;
     --line: #211d1d22;
-    --muted: #78685e;
+    --muted: #5a4c44;
     --wine: #A94B5C;
     --gold: #8A7A2F;
     --teal: #356B73;
     --forest: #2F6B45;
+    --hero-title: #1c1716;
+    --hero-sub: #3b302b;
+    --hero-accent: #c94e23;
+    --hero-shadow: 0 2px 12px rgba(255, 252, 247, 0.96), 0 0 4px rgba(255, 255, 255, 0.9);
+    --hero-bg: rgba(255, 250, 244, 0.42);
+    --hero-border: rgba(33, 29, 29, 0.10);
   }
   #island-app * {
     box-sizing: border-box;
@@ -39,7 +45,7 @@
     position: relative;
     width: 100%;
     height: 100dvh;
-    min-height: 620px;
+    min-height: 480px;
     overflow: hidden;
     background: radial-gradient(ellipse at 44% 35%, #fffdf9 0%, #fff8f4 44%, #edddcf 100%);
     color: var(--ink);
@@ -175,13 +181,20 @@
     background: #fcea8b;
   }
 
-  /* Brand & Hero Note */
+  /* Brand & Hero Note (隨光影自動調整字體與光暈對比度) */
   .brand {
     position: absolute;
-    top: 24px;
-    left: 28px;
+    top: 20px;
+    left: 24px;
     pointer-events: none;
     z-index: 4;
+    background: var(--hero-bg);
+    border: 1px solid var(--hero-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 10px 16px;
+    border-radius: 14px;
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
   .eyebrow {
     font: 700 10px ui-monospace, monospace;
@@ -191,53 +204,71 @@
   .brand h1 {
     pointer-events: auto;
     cursor: pointer;
-    font-size: clamp(22px, 2.2vw, 30px);
+    font-size: clamp(18px, 2.1vw, 29px);
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     line-height: 1.25;
     margin: 0;
-    color: var(--ink);
-    text-shadow: 0 2px 10px rgba(255, 248, 244, 0.85);
+    color: var(--hero-title);
+    text-shadow: var(--hero-shadow);
+    transition: color 0.25s ease, text-shadow 0.25s ease;
   }
   .brand h1 em {
     font-style: normal;
     font-weight: 900;
-    color: var(--coral);
+    color: var(--hero-accent);
     letter-spacing: 1px;
     margin: 0 4px;
+    transition: color 0.25s ease;
   }
   .brand .candidate {
-    font-size: clamp(13px, 1.15vw, 15.5px);
-    font-weight: 700;
-    letter-spacing: 2px;
-    margin: 7px 0 0;
-    color: var(--muted);
-    text-shadow: 0 1px 6px rgba(255, 248, 244, 0.85);
+    font-size: clamp(12px, 1.1vw, 15px);
+    font-weight: 800;
+    letter-spacing: 1.8px;
+    margin: 6px 0 0;
+    color: var(--hero-sub);
+    text-shadow: var(--hero-shadow);
+    transition: color 0.25s ease, text-shadow 0.25s ease;
   }
   .hero-note {
     position: absolute;
-    left: 28px;
-    top: 118px;
+    left: 24px;
+    top: 116px;
     max-width: none;
     pointer-events: none;
     z-index: 3;
+    background: var(--hero-bg);
+    border: 1px solid var(--hero-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 10px 16px 12px;
+    border-radius: 14px;
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
   .hero-note .number {
-    font: italic 56px/0.92 Georgia, serif;
-    color: var(--coral);
+    font: italic clamp(38px, 3.8vw, 54px)/0.92 Georgia, serif;
+    color: var(--hero-accent);
+    text-shadow: var(--hero-shadow);
+    transition: color 0.25s ease, text-shadow 0.25s ease;
   }
   .hero-note h2 {
-    font-size: 16px;
+    font-size: clamp(13.5px, 1.2vw, 16px);
     font-weight: 800;
     line-height: 1.45;
-    margin: 8px 0 6px;
+    margin: 6px 0 5px;
     white-space: nowrap;
+    color: var(--hero-title);
+    text-shadow: var(--hero-shadow);
+    transition: color 0.25s ease, text-shadow 0.25s ease;
   }
   .hero-note p {
-    font-size: 11.5px;
-    color: var(--muted);
-    line-height: 1.7;
+    font-size: clamp(11px, 0.95vw, 12px);
+    font-weight: 700;
+    color: var(--hero-sub);
+    text-shadow: var(--hero-shadow);
+    line-height: 1.65;
     margin: 0;
+    transition: color 0.25s ease, text-shadow 0.25s ease;
   }
 
   /* Top Toolbar */
@@ -801,16 +832,47 @@
     font-weight: 600;
   }
 
-  @media (max-width: 900px) {
+  /* 響應式斷點 1：中大型筆電與 Google 協作平台寬螢幕嵌入框 (<= 1360px) */
+  @media (max-width: 1360px) {
+    #stage { inset: 0 280px 0 0; }
+    .sidebar { width: 280px; }
+    .toolbar { right: 294px; top: 18px; }
+    .controls { left: 18px; right: 294px; }
+    .dock { left: 18px; right: 294px; }
+    .card { right: 292px; width: 310px; }
+    .brand { left: 18px; top: 16px; padding: 8px 14px; }
+    .hero-note { left: 18px; top: 106px; padding: 8px 14px 10px; }
+    .map-tools { left: 18px; }
+    .mascot { left: 18px; }
+  }
+
+  /* 響應式斷點 2：高度較矮之筆電或 Google 協作平台橫向嵌入框 (max-height: 760px) */
+  @media (max-height: 760px) {
+    .brand { top: 12px; padding: 6px 12px; }
+    .brand .candidate { margin-top: 3px; }
+    .hero-note { top: 92px; padding: 6px 12px 8px; }
+    .hero-note .number { font-size: 34px; }
+    .hero-note h2 { font-size: 13px; margin: 4px 0 3px; }
+    .hero-note p { font-size: 10.5px; line-height: 1.4; }
+    .map-tools { bottom: 162px; gap: 5px; }
+    .mascot { bottom: 120px; padding: 3px 12px 3px 6px; font-size: 11px; }
+    .controls { bottom: 38px; padding: 7px 12px; }
+    .control-tabs { padding-bottom: 5px; margin-bottom: 6px; }
+  }
+
+  /* 響應式斷點 3：平板與中小型視窗 (<= 1024px) */
+  @media (max-width: 1024px) {
     #stage { inset: 0; }
     .sidebar {
       transform: translateX(100%);
-      width: 300px;
+      width: min(320px, 86vw);
+      box-shadow: -8px 0 28px rgba(0, 0, 0, 0.18);
     }
     .sidebar.open {
       transform: translateX(0);
     }
-    .toolbar { right: 16px; top: 14px; }
+    .toolbar { right: 16px; top: 16px; gap: 6px; }
+    .toolbar button { min-height: 34px; padding: 6px 10px; font-size: 12px; }
     .controls { left: 14px; right: 14px; bottom: 42px; }
     .dock { left: 14px; right: 14px; }
     .card {
@@ -818,12 +880,103 @@
       left: 14px;
       width: auto;
       top: auto;
-      bottom: 50px;
-      max-height: 58dvh;
+      bottom: 48px;
+      max-height: 55dvh;
     }
     .hero-note { display: none; }
-    .map-tools { left: 14px; bottom: 190px; }
+    .map-tools { left: 14px; bottom: 184px; }
+    .mascot { left: 14px; bottom: 140px; max-width: calc(100vw - 28px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .island-label { font-size: 11px; padding: 3px 8px; min-height: 24px; }
+  }
+
+  /* 響應式斷點 4：手機直向與窄螢幕載具 (<= 680px) */
+  @media (max-width: 680px) {
+    .brand {
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      padding: 7px 11px;
+      border-radius: 11px;
+    }
+    .brand h1 {
+      font-size: clamp(15px, 4.4vw, 19px);
+      letter-spacing: 0.8px;
+    }
+    .brand .candidate {
+      font-size: clamp(10.5px, 3.1vw, 12.5px);
+      letter-spacing: 1px;
+      margin-top: 3px;
+    }
+    .toolbar {
+      top: 74px;
+      left: 10px;
+      right: 10px;
+      justify-content: flex-start;
+      gap: 5px;
+    }
+    .toolbar button {
+      min-height: 30px;
+      padding: 4px 8px;
+      font-size: 11px;
+      border-radius: 7px;
+    }
     .mascot { display: none; }
+    .map-tools {
+      left: 10px;
+      right: 10px;
+      bottom: 158px;
+      flex-direction: row;
+      overflow-x: auto;
+      gap: 6px;
+      padding-bottom: 2px;
+    }
+    .tool-group {
+      flex-shrink: 0;
+      padding: 3px;
+    }
+    .tool-group button {
+      min-height: 28px;
+      padding: 3px 7px;
+      font-size: 10.5px;
+    }
+    .controls {
+      left: 10px;
+      right: 10px;
+      bottom: 38px;
+      padding: 8px 10px;
+    }
+    .control-tabs button {
+      font-size: 10.5px;
+      padding: 3px 7px;
+      min-height: 25px;
+    }
+    .control-tabs .status {
+      display: none;
+    }
+    .control-note {
+      font-size: 10px;
+      line-height: 1.35;
+    }
+    .dock {
+      left: 10px;
+      right: 10px;
+      bottom: 6px;
+    }
+    .dock button {
+      min-height: 25px;
+      font-size: 10px;
+      padding: 2px 6px;
+    }
+    .island-label {
+      font-size: 10px;
+      padding: 2px 6px;
+      min-height: 22px;
+      border-width: 1.5px;
+    }
+    .island-label strong {
+      font-size: 9px;
+      padding: 0 4px;
+    }
   }
 </style>
 
@@ -2039,6 +2192,30 @@ function createBaliEnvironment(THREE, scene, cityCenter, glowMat, animators) {
 
     if (gMat) {
       gMat.emissiveIntensity = 0.35 + night * 1.45;
+    }
+
+    // ★ 隨光影自動調整畫面上方標題與引言的字體顏色與陰影對比度，避免背景色接近導致難以辨識
+    const appEl = document.getElementById("island-app");
+    if (appEl) {
+      const skyLum = 0.299 * skyTop.r + 0.587 * skyTop.g + 0.114 * skyTop.b;
+      const isDarkOrTwilight = night > 0.22 || skyLum < 0.58;
+      if (isDarkOrTwilight) {
+        // 晨曦彩霞、黃昏晚霞與星夜深藍背景：切換為高對比星光白與璀璨金字體＋深色立體光暈
+        appEl.style.setProperty("--hero-title", "#ffffff");
+        appEl.style.setProperty("--hero-sub", "#fff4dc");
+        appEl.style.setProperty("--hero-accent", "#ffe066");
+        appEl.style.setProperty("--hero-shadow", "0 2px 12px rgba(8, 12, 26, 0.92), 0 1px 4px rgba(0, 0, 0, 0.95)");
+        appEl.style.setProperty("--hero-bg", "rgba(15, 23, 42, 0.52)");
+        appEl.style.setProperty("--hero-border", "rgba(255, 255, 255, 0.18)");
+      } else {
+        // 白晝明亮淺藍天空與海面：切換為高對比濃墨黑與深暖棕字體＋明亮柔光暈
+        appEl.style.setProperty("--hero-title", "#1c1716");
+        appEl.style.setProperty("--hero-sub", "#3b302b");
+        appEl.style.setProperty("--hero-accent", "#c94e23");
+        appEl.style.setProperty("--hero-shadow", "0 2px 12px rgba(255, 252, 247, 0.96), 0 0 4px rgba(255, 255, 255, 0.92)");
+        appEl.style.setProperty("--hero-bg", "rgba(255, 250, 244, 0.45)");
+        appEl.style.setProperty("--hero-border", "rgba(33, 29, 29, 0.10)");
+      }
     }
   }
 
@@ -4286,8 +4463,17 @@ async function initBaliIslandsApp(initialLabels) {
     labelEls.set(t.id, el);
   }
 
-  // 鏡頭平滑飛行狀態
-  const defaultCamOffset = new THREE.Vector3(0, 15.0, 22.8);
+  // 鏡頭平滑飛行狀態（依螢幕長寬比響應式自動調整全景距離）
+  const baseCamOffset = new THREE.Vector3(0, 15.0, 22.8);
+  function getResponsiveCamOffset(bird = false) {
+    const w = stage.clientWidth || window.innerWidth || 1200;
+    const h = stage.clientHeight || window.innerHeight || 800;
+    const aspect = w / Math.max(1, h);
+    // 當載具為直立手機或較窄視窗時，自動拉遠鏡頭讓 14 座島嶼完整呈現在畫面中
+    const zoomScale = aspect < 1.25 ? Math.min(1.75, 1.25 / Math.max(0.48, aspect)) : 1.0;
+    const base = bird ? new THREE.Vector3(0, 28, 4.5) : baseCamOffset;
+    return base.clone().multiplyScalar(zoomScale);
+  }
   let camAnim = null;
   let selectedId = null;
   let activeColorFilter = null;
@@ -4315,7 +4501,7 @@ async function initBaliIslandsApp(initialLabels) {
 
   function resetCamera(duration = 0.95) {
     followMascot = false;
-    const offset = isBirdView ? new THREE.Vector3(0, 28, 4.5) : defaultCamOffset;
+    const offset = getResponsiveCamOffset(isBirdView);
     startCameraFlight(cityCenter.clone().add(offset), cityCenter.clone(), duration);
   }
   window.resetIslandCamera = () => {
@@ -4344,23 +4530,24 @@ async function initBaliIslandsApp(initialLabels) {
     camAnim = null;
   });
 
-  // 設定初始鏡頭位置
-  camera.position.copy(cityCenter).add(defaultCamOffset);
-  controls.target.copy(cityCenter);
-  controls.update();
-  env.setTimeOfDay(dayMinutes, kit.glowMat);
-
-  // 尺寸自適應
+  // 尺寸自適應（支援桌機、筆電、平板、手機直橫向與 Google Sites 嵌入框）
   function onResize() {
     const w = stage.clientWidth || window.innerWidth;
     const h = stage.clientHeight || window.innerHeight;
-    camera.aspect = w / h;
+    camera.aspect = w / Math.max(1, h);
+    camera.fov = camera.aspect < 0.85 ? 36 : 32;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
     labelRenderer.setSize(w, h);
   }
   window.addEventListener("resize", onResize);
   onResize();
+
+  // 設定初始鏡頭位置
+  camera.position.copy(cityCenter).add(getResponsiveCamOffset(false));
+  controls.target.copy(cityCenter);
+  controls.update();
+  env.setTimeOfDay(dayMinutes, kit.glowMat);
 
   // 更新島嶼高亮與篩選狀態
   function updateFilterVisuals() {
