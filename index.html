@@ -83,6 +83,10 @@
     position: absolute;
     inset: 0 320px 0 0;
     touch-action: none;
+    transition: right 0.25s ease;
+  }
+  #island-app.sidebar-collapsed #stage {
+    inset: 0;
   }
   #stage canvas {
     display: block;
@@ -291,6 +295,10 @@
     gap: 8px;
     z-index: 6;
     flex-wrap: wrap;
+    transition: right 0.25s ease;
+  }
+  #island-app.sidebar-collapsed .toolbar {
+    right: 22px;
   }
   .toolbar button {
     background: #fff8f4eb;
@@ -407,6 +415,10 @@
     border-radius: 13px;
     padding: 10px 16px;
     box-shadow: 0 6px 22px rgba(33, 29, 29, 0.08);
+    transition: right 0.25s ease;
+  }
+  #island-app.sidebar-collapsed .controls {
+    right: 28px;
   }
   .control-tabs {
     display: flex;
@@ -497,6 +509,10 @@
     gap: 6px;
     overflow-x: auto;
     padding-bottom: 2px;
+    transition: right 0.25s ease;
+  }
+  #island-app.sidebar-collapsed .dock {
+    right: 28px;
   }
   .dock button {
     min-height: 32px;
@@ -532,6 +548,9 @@
     z-index: 7;
     backdrop-filter: blur(16px);
     transition: transform 0.25s ease;
+  }
+  #island-app.sidebar-collapsed .sidebar {
+    transform: translateX(100%);
   }
   .side-head {
     padding: 22px 20px 14px;
@@ -663,6 +682,10 @@
     z-index: 8;
     box-shadow: 0 14px 36px rgba(33, 29, 29, 0.16);
     animation: cardIn 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: right 0.25s ease;
+  }
+  #island-app.sidebar-collapsed .card {
+    right: 22px;
   }
   @keyframes cardIn {
     from { opacity: 0; transform: translateY(10px) scale(0.98); }
@@ -958,6 +981,10 @@
     .controls { left: 16px; right: 284px; bottom: 46px; }
     .dock { left: 16px; right: 284px; }
     .card { right: 282px; width: 300px; }
+    #island-app.sidebar-collapsed .toolbar { right: 16px; }
+    #island-app.sidebar-collapsed .controls { right: 16px; }
+    #island-app.sidebar-collapsed .dock { right: 16px; }
+    #island-app.sidebar-collapsed .card { right: 16px; }
     .brand { left: 16px; top: 14px; padding: 8px 14px; }
     .brand h1 { font-size: clamp(16px, 1.9vw, 24px); }
     .brand .candidate { font-size: clamp(11px, 1.05vw, 14px); }
@@ -985,12 +1012,8 @@
   @media (max-width: 1024px) {
     #stage { inset: 0; }
     .sidebar {
-      transform: translateX(100%);
       width: min(300px, 84vw);
       box-shadow: -8px 0 28px rgba(0, 0, 0, 0.18);
-    }
-    .sidebar.open {
-      transform: translateX(0);
     }
     .brand { top: 10px; left: 12px; padding: 7px 12px; border-radius: 11px; }
     .brand h1 { font-size: clamp(14px, 2.2vw, 19px); letter-spacing: 0.8px; }
@@ -1248,6 +1271,7 @@
       ✨ 課程設計團隊
     </button>
     <button id="btn-home" title="回到群島全景">↗ 全景總覽</button>
+    <button id="btn-sidebar-toggle" aria-pressed="true" title="顯示或隱藏最右邊的「步道，連起來。」資訊欄">☰ 步道清單</button>
     <button id="btn-help" title="操作說明">?</button>
   </nav>
 
@@ -5244,7 +5268,10 @@ async function initBaliIslandsApp(initialLabels) {
     $$("#tree-list [data-island-id]").forEach(el => {
       el.addEventListener("click", () => {
         selectIsland(el.dataset.islandId, true);
-        if (window.innerWidth <= 900) $("#sidebar").classList.remove("open");
+        if (window.innerWidth <= 1024 && appRoot) {
+          appRoot.classList.add("sidebar-collapsed");
+          if ($("#btn-sidebar-toggle")) $("#btn-sidebar-toggle").setAttribute("aria-pressed", "false");
+        }
       });
     });
   }
@@ -5359,9 +5386,20 @@ async function initBaliIslandsApp(initialLabels) {
     selectIsland(null);
     resetCamera();
   });
-  if ($("#btn-sidebar-toggle")) {
+  if ($("#btn-sidebar-toggle") && appRoot) {
+    // 平板與手機預設收合右側清單，桌機預設展開
+    if ((stage.clientWidth || window.innerWidth) <= 1024) {
+      appRoot.classList.add("sidebar-collapsed");
+      $("#btn-sidebar-toggle").setAttribute("aria-pressed", "false");
+    } else {
+      $("#btn-sidebar-toggle").setAttribute("aria-pressed", "true");
+    }
     $("#btn-sidebar-toggle").addEventListener("click", () => {
-      $("#sidebar").classList.toggle("open");
+      const isCollapsed = appRoot.classList.toggle("sidebar-collapsed");
+      $("#btn-sidebar-toggle").setAttribute("aria-pressed", String(!isCollapsed));
+      onResize();
+      setTimeout(onResize, 130);
+      setTimeout(onResize, 270);
     });
   }
   $("#btn-help").addEventListener("click", () => {
