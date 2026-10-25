@@ -31,12 +31,12 @@
     --gold: #8A7A2F;
     --teal: #356B73;
     --forest: #2F6B45;
-    --hero-title: #1c1716;
-    --hero-sub: #3b302b;
-    --hero-accent: #c94e23;
-    --hero-shadow: 0 2px 12px rgba(255, 252, 247, 0.96), 0 0 4px rgba(255, 255, 255, 0.9);
-    --hero-bg: rgba(255, 250, 244, 0.42);
-    --hero-border: rgba(33, 29, 29, 0.10);
+    --hero-title: #ffffff;
+    --hero-sub: #f6ece1;
+    --hero-accent: #ffd166;
+    --hero-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
+    --hero-bg: rgba(24, 21, 20, 0.72);
+    --hero-border: rgba(255, 248, 240, 0.22);
   }
   #island-app * {
     box-sizing: border-box;
@@ -104,23 +104,23 @@
   }
   #island-app .island-label {
     pointer-events: auto;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 3px 9px;
-    min-height: 24px;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 4px 11px;
+    min-height: 28px;
     line-height: 1.2;
-    border: 1.8px solid var(--pole-color, #211d1d40);
-    border-radius: 7px;
+    border: 2px solid var(--pole-color, #211d1d40);
+    border-radius: 8px;
     background: var(--bg-color, #fff8f4f2);
     color: var(--font-color, #211d1d);
-    box-shadow: 0 3px 8px rgba(33, 29, 29, 0.16);
+    box-shadow: 0 3px 9px rgba(33, 29, 29, 0.18);
     white-space: nowrap;
     transform-origin: center center;
     transform: translateY(var(--nudge-y, 0px)) scale(var(--label-scale, 1));
     transition: transform 0.16s ease, opacity 0.2s ease, background 0.18s ease;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     cursor: pointer;
   }
   #island-app .island-label:hover {
@@ -129,9 +129,9 @@
   }
   #island-app .island-label strong {
     color: var(--pole-color, var(--coral));
-    font: 800 10px ui-monospace, monospace;
-    background: rgba(255,255,255,0.78);
-    padding: 1px 4px;
+    font: 800 11.5px ui-monospace, monospace;
+    background: rgba(255,255,255,0.82);
+    padding: 1px 5px;
     border-radius: 4px;
   }
   #island-app .island-label.selected {
@@ -152,14 +152,14 @@
     pointer-events: auto;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    min-height: 22px;
+    gap: 5px;
+    padding: 3px 10px;
+    min-height: 25px;
     border-radius: 99px;
     background: linear-gradient(135deg, #fffdf4 0%, #f4f7d9 100%);
-    border: 1.8px solid #6b8e3d;
+    border: 2px solid #6b8e3d;
     color: #2c3e18;
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 800;
     box-shadow: 0 3px 10px rgba(0,0,0,0.18);
     cursor: pointer;
@@ -173,22 +173,22 @@
     background: #fcea8b;
   }
   #island-app .mascot-3d-label img {
-    width: 16px;
-    height: 21px;
+    width: 18px;
+    height: 23px;
     object-fit: contain;
   }
   #island-app .bridge-landmark-label {
     pointer-events: auto;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 2px 9px;
-    min-height: 22px;
+    gap: 5px;
+    padding: 3px 11px;
+    min-height: 25px;
     border-radius: 99px;
-    background: rgba(255, 248, 244, 0.90);
-    border: 1.5px solid #db6a41;
+    background: rgba(255, 248, 244, 0.92);
+    border: 1.8px solid #db6a41;
     color: #211d1d;
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 800;
     box-shadow: 0 3px 10px rgba(0,0,0,0.12);
     cursor: pointer;
@@ -202,7 +202,7 @@
     background: #fcea8b;
   }
 
-  /* Brand & Hero Note (隨光影自動調整字體與光暈對比度) */
+  /* Brand & Hero Note (深色磨砂玻璃底＋淺色高對比字體) */
   .brand {
     position: absolute;
     top: 20px;
@@ -211,11 +211,11 @@
     z-index: 4;
     background: var(--hero-bg);
     border: 1px solid var(--hero-border);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    padding: 10px 16px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 11px 18px;
     border-radius: 14px;
-    transition: background 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
   }
   .eyebrow {
     font: 700 10px ui-monospace, monospace;
@@ -232,7 +232,6 @@
     margin: 0;
     color: var(--hero-title);
     text-shadow: var(--hero-shadow);
-    transition: color 0.25s ease, text-shadow 0.25s ease;
   }
   .brand h1 em {
     font-style: normal;
@@ -240,7 +239,6 @@
     color: var(--hero-accent);
     letter-spacing: 1px;
     margin: 0 4px;
-    transition: color 0.25s ease;
   }
   .brand .candidate {
     font-size: clamp(12px, 1.1vw, 15px);
@@ -249,47 +247,38 @@
     margin: 6px 0 0;
     color: var(--hero-sub);
     text-shadow: var(--hero-shadow);
-    transition: color 0.25s ease, text-shadow 0.25s ease;
   }
   .hero-note {
     position: absolute;
     left: 24px;
-    top: 116px;
+    top: 118px;
     max-width: none;
     pointer-events: none;
     z-index: 3;
     background: var(--hero-bg);
     border: 1px solid var(--hero-border);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    padding: 10px 16px 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 12px 18px 14px;
     border-radius: 14px;
-    transition: background 0.3s ease, border-color 0.3s ease;
-  }
-  .hero-note .number {
-    font: italic clamp(38px, 3.8vw, 54px)/0.92 Georgia, serif;
-    color: var(--hero-accent);
-    text-shadow: var(--hero-shadow);
-    transition: color 0.25s ease, text-shadow 0.25s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
   }
   .hero-note h2 {
-    font-size: clamp(13.5px, 1.2vw, 16px);
+    font-size: clamp(17px, 1.55vw, 20.5px);
     font-weight: 800;
     line-height: 1.45;
-    margin: 6px 0 5px;
+    margin: 0 0 6px;
     white-space: nowrap;
     color: var(--hero-title);
     text-shadow: var(--hero-shadow);
-    transition: color 0.25s ease, text-shadow 0.25s ease;
   }
   .hero-note p {
-    font-size: clamp(11px, 0.95vw, 12px);
+    font-size: clamp(14px, 1.2vw, 16px);
     font-weight: 700;
     color: var(--hero-sub);
     text-shadow: var(--hero-shadow);
     line-height: 1.65;
     margin: 0;
-    transition: color 0.25s ease, text-shadow 0.25s ease;
   }
 
   /* Top Toolbar */
@@ -409,7 +398,7 @@
     position: absolute;
     left: 28px;
     right: 336px;
-    bottom: 44px;
+    bottom: 50px;
     z-index: 5;
     background: #fff8f4eb;
     backdrop-filter: blur(14px);
@@ -496,7 +485,7 @@
     display: inline-block;
   }
 
-  /* Bottom Numbered Dock */
+  /* Bottom Numbered Dock (放大下方學道標籤字體與按鈕尺寸) */
   .dock {
     position: absolute;
     left: 28px;
@@ -504,25 +493,26 @@
     bottom: 8px;
     z-index: 5;
     display: flex;
-    gap: 4px;
+    gap: 6px;
     overflow-x: auto;
     padding-bottom: 2px;
   }
   .dock button {
-    min-height: 28px;
-    padding: 2px 8px;
-    font: 700 10.5px ui-monospace, monospace;
-    border-radius: 6px;
-    background: #fff8f4d9;
+    min-height: 32px;
+    padding: 4px 11px;
+    font: 800 12.5px ui-monospace, monospace;
+    border-radius: 8px;
+    background: #fff8f4eb;
     white-space: nowrap;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
   }
   .dock button span.nm {
     font-family: "Noto Sans TC", sans-serif;
-    font-weight: 600;
-    max-width: 68px;
+    font-size: 13px;
+    font-weight: 700;
+    max-width: 96px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -859,31 +849,29 @@
     .sidebar { width: 270px; }
     .toolbar { right: 284px; top: 16px; gap: 6px; }
     .toolbar button { font-size: 11.5px; padding: 5px 10px; min-height: 32px; }
-    .controls { left: 16px; right: 284px; }
+    .controls { left: 16px; right: 284px; bottom: 46px; }
     .dock { left: 16px; right: 284px; }
     .card { right: 282px; width: 300px; }
-    .brand { left: 16px; top: 14px; padding: 7px 13px; }
+    .brand { left: 16px; top: 14px; padding: 8px 14px; }
     .brand h1 { font-size: clamp(16px, 1.9vw, 24px); }
     .brand .candidate { font-size: clamp(11px, 1.05vw, 14px); }
-    .hero-note { left: 16px; top: 96px; padding: 7px 13px 9px; }
-    .hero-note .number { font-size: clamp(30px, 3.2vw, 44px); }
-    .hero-note h2 { font-size: clamp(12px, 1.1vw, 14.5px); }
-    .hero-note p { font-size: clamp(10px, 0.9vw, 11.5px); }
+    .hero-note { left: 16px; top: 96px; padding: 9px 15px 11px; }
+    .hero-note h2 { font-size: clamp(15px, 1.4vw, 18.5px); margin: 0 0 5px; }
+    .hero-note p { font-size: clamp(12.5px, 1.1vw, 14.5px); }
     .map-tools { left: 16px; }
     .mascot { left: 16px; }
   }
 
   /* 響應式斷點 2：高度較矮之筆電或橫向嵌入框 (max-height: 760px) */
   @media (max-height: 760px) {
-    .brand { top: 10px; padding: 5px 11px; }
+    .brand { top: 10px; padding: 6px 12px; }
     .brand .candidate { margin-top: 2px; }
-    .hero-note { top: 82px; padding: 5px 11px 7px; }
-    .hero-note .number { font-size: 28px; }
-    .hero-note h2 { font-size: 12px; margin: 3px 0 2px; }
-    .hero-note p { font-size: 10px; line-height: 1.35; }
-    .map-tools { bottom: 152px; gap: 4px; }
-    .mascot { bottom: 112px; padding: 2px 10px 2px 6px; font-size: 10.5px; }
-    .controls { bottom: 36px; padding: 6px 11px; }
+    .hero-note { top: 82px; padding: 7px 12px 8px; }
+    .hero-note h2 { font-size: 15px; margin: 0 0 4px; }
+    .hero-note p { font-size: 12.5px; line-height: 1.4; }
+    .map-tools { bottom: 156px; gap: 4px; }
+    .mascot { bottom: 116px; padding: 2px 10px 2px 6px; font-size: 10.5px; }
+    .controls { bottom: 42px; padding: 6px 11px; }
     .control-tabs { padding-bottom: 4px; margin-bottom: 5px; }
   }
 
@@ -898,44 +886,44 @@
     .sidebar.open {
       transform: translateX(0);
     }
-    .brand { top: 10px; left: 12px; padding: 6px 11px; border-radius: 11px; }
+    .brand { top: 10px; left: 12px; padding: 7px 12px; border-radius: 11px; }
     .brand h1 { font-size: clamp(14px, 2.2vw, 19px); letter-spacing: 0.8px; }
     .brand .candidate { font-size: clamp(10px, 1.4vw, 12.5px); letter-spacing: 1px; margin-top: 2px; }
-    .hero-note { top: 76px; left: 12px; padding: 5px 10px 6px; border-radius: 10px; }
-    .hero-note .number { font-size: clamp(22px, 3vw, 30px); }
-    .hero-note h2 { font-size: clamp(10.5px, 1.3vw, 12.5px); margin: 2px 0; }
-    .hero-note p { font-size: clamp(9px, 1.1vw, 10.5px); line-height: 1.35; }
+    .hero-note { top: 76px; left: 12px; padding: 7px 12px 8px; border-radius: 10px; }
+    .hero-note h2 { font-size: clamp(13.5px, 1.65vw, 16px); margin: 0 0 4px; }
+    .hero-note p { font-size: clamp(11.5px, 1.35vw, 13.5px); line-height: 1.4; }
     .toolbar { right: 12px; top: 10px; gap: 5px; }
     .toolbar button { min-height: 28px; padding: 4px 8px; font-size: 11px; border-radius: 7px; }
-    .controls { left: 12px; right: 12px; bottom: 36px; padding: 7px 11px; }
-    .dock { left: 12px; right: 12px; bottom: 6px; }
-    .dock button { min-height: 24px; padding: 2px 6px; font-size: 9.5px; }
+    .controls { left: 12px; right: 12px; bottom: 42px; padding: 7px 11px; }
+    .dock { left: 12px; right: 12px; bottom: 6px; gap: 5px; }
+    .dock button { min-height: 28px; padding: 3px 9px; font-size: 11.5px; }
+    .dock button span.nm { font-size: 12px; max-width: 82px; }
     .card {
       right: 12px;
       left: 12px;
       width: auto;
       top: auto;
-      bottom: 40px;
+      bottom: 44px;
       max-height: 56dvh;
       padding: 14px;
     }
     .card h3 { font-size: 16px; }
     .card-desc { font-size: 11.5px; line-height: 1.5; margin-bottom: 10px; }
-    .map-tools { left: 12px; bottom: 160px; }
+    .map-tools { left: 12px; bottom: 164px; }
     .tool-group button { min-height: 26px; padding: 3px 7px; font-size: 10.5px; }
-    .mascot { left: 12px; bottom: 120px; padding: 2px 10px 2px 6px; font-size: 10px; max-width: calc(100vw - 24px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    #island-app .island-label { font-size: 10.5px; padding: 2px 7px; min-height: 20px; }
-    #island-app .island-label strong { font-size: 9px; padding: 0 3px; }
+    .mascot { left: 12px; bottom: 124px; padding: 2px 10px 2px 6px; font-size: 10px; max-width: calc(100vw - 24px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #island-app .island-label { font-size: 13px; padding: 3px 9px; min-height: 24px; }
+    #island-app .island-label strong { font-size: 10.5px; padding: 1px 4px; }
   }
 
-  /* 響應式斷點 4：手機直向與窄螢幕載具 (<= 680px) — 字體與元件全面等比例縮小、絕不擠在一起 */
+  /* 響應式斷點 4：手機直向與窄螢幕載具 (<= 680px) — 字體與元件等比例縮放、清晰好讀不擁擠 */
   @media (max-width: 680px) {
     .brand {
       top: 6px;
       left: 8px;
       right: auto;
       max-width: calc(100vw - 16px);
-      padding: 4px 9px;
+      padding: 5px 10px;
       border-radius: 9px;
     }
     .brand h1 {
@@ -951,11 +939,11 @@
     .brand .candidate {
       font-size: clamp(8.5px, 2.45vw, 10.5px);
       letter-spacing: 0.5px;
-      margin-top: 1px;
+      margin-top: 2px;
       white-space: nowrap;
     }
     .toolbar {
-      top: 46px;
+      top: 48px;
       left: 8px;
       right: 8px;
       justify-content: flex-start;
@@ -973,31 +961,25 @@
       flex-shrink: 0;
     }
     .hero-note {
-      top: 73px;
+      top: 75px;
       left: 8px;
-      padding: 3px 8px 4px;
-      border-radius: 8px;
-    }
-    .hero-note .number {
-      font-size: clamp(15px, 4.2vw, 19px);
-      display: inline-block;
-      margin-right: 4px;
-      line-height: 1;
+      padding: 5px 10px 6px;
+      border-radius: 9px;
     }
     .hero-note h2 {
-      font-size: clamp(8px, 2.2vw, 9.5px);
-      line-height: 1.25;
-      margin: 1px 0;
+      font-size: clamp(11px, 3.1vw, 13.5px);
+      line-height: 1.3;
+      margin: 0 0 3px;
     }
     .hero-note p {
-      font-size: clamp(7.5px, 2.0vw, 8.5px);
-      line-height: 1.25;
+      font-size: clamp(9.5px, 2.65vw, 11.5px);
+      line-height: 1.35;
     }
     .mascot { display: none; }
     .map-tools {
       left: 8px;
       right: 8px;
-      bottom: 92px;
+      bottom: 98px;
       flex-direction: row;
       overflow-x: auto;
       gap: 4px;
@@ -1019,7 +1001,7 @@
     .controls {
       left: 8px;
       right: 8px;
-      bottom: 26px;
+      bottom: 32px;
       padding: 5px 8px;
       border-radius: 9px;
     }
@@ -1076,63 +1058,64 @@
       left: 8px;
       right: 8px;
       bottom: 4px;
-      gap: 3px;
+      gap: 4px;
     }
     .dock button {
-      min-height: 19px;
-      font-size: 8.5px;
-      padding: 1px 5px;
-      border-radius: 4px;
-      gap: 2px;
+      min-height: 24px;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      gap: 3px;
     }
     .dock button span.nm {
-      max-width: 44px;
-      font-size: 8px;
+      max-width: 68px;
+      font-size: 10.5px;
     }
     #island-app .island-label {
-      font-size: 10px;
-      padding: 2px 5px;
-      min-height: 16px;
-      border-width: 1.2px;
-      border-radius: 5px;
-      gap: 2px;
+      font-size: 12px;
+      padding: 3px 7px;
+      min-height: 20px;
+      border-width: 1.5px;
+      border-radius: 6px;
+      gap: 3px;
     }
     #island-app .island-label strong {
-      font-size: 8.5px;
-      padding: 0 2.5px;
+      font-size: 10px;
+      padding: 0.5px 3.5px;
       border-radius: 3px;
     }
     #island-app .mascot-3d-label,
     #island-app .bridge-landmark-label {
-      font-size: 9.5px;
-      padding: 1.5px 6px;
-      min-height: 16px;
+      font-size: 11px;
+      padding: 2px 7px;
+      min-height: 19px;
       gap: 3px;
     }
     #island-app .mascot-3d-label img {
-      width: 12px;
-      height: 16px;
+      width: 14px;
+      height: 18px;
     }
   }
 
   /* 響應式斷點 5：手機橫向模式或極矮嵌入框 (max-height: 540px) */
   @media (max-height: 540px) {
-    .brand { top: 5px; left: 8px; padding: 3px 8px; border-radius: 8px; }
-    .brand h1 { font-size: 12px; }
-    .brand .candidate { font-size: 9px; margin-top: 1px; }
+    .brand { top: 5px; left: 8px; padding: 4px 9px; border-radius: 8px; }
+    .brand h1 { font-size: 12.5px; }
+    .brand .candidate { font-size: 9.5px; margin-top: 1px; }
     .hero-note { display: none; }
     .mascot { display: none; }
     .toolbar { top: 5px; right: 8px; gap: 4px; }
     .toolbar button { min-height: 22px; padding: 2px 6px; font-size: 9.5px; }
-    .map-tools { left: 8px; bottom: 82px; flex-direction: row; gap: 4px; }
+    .map-tools { left: 8px; bottom: 88px; flex-direction: row; gap: 4px; }
     .tool-group { padding: 2px; }
     .tool-group button { min-height: 19px; padding: 1px 5px; font-size: 8.5px; }
-    .controls { left: 8px; right: 8px; bottom: 24px; padding: 4px 8px; }
+    .controls { left: 8px; right: 8px; bottom: 28px; padding: 4px 8px; }
     .control-tabs { margin-bottom: 3px; padding-bottom: 2px; }
     .control-tabs button { min-height: 18px; padding: 1px 5px; font-size: 8.5px; }
     .control-note { display: none; }
     .dock { left: 8px; right: 8px; bottom: 3px; }
-    .dock button { min-height: 18px; font-size: 8px; padding: 1px 4px; }
+    .dock button { min-height: 22px; font-size: 10px; padding: 2px 6px; }
+    .dock button span.nm { font-size: 10px; max-width: 64px; }
   }
 </style>
 
@@ -1149,7 +1132,6 @@
 
   <!-- 左側引言 -->
   <div class="hero-note">
-    <div class="number" id="hero-island-count">14</div>
     <h2>一套智慧創客晶片模組學習學道<br>一座探索之島</h2>
     <p>從一個興趣與感動出發，<br>看見八里跨域課程的連結。</p>
   </div>
@@ -2348,30 +2330,6 @@ function createBaliEnvironment(THREE, scene, cityCenter, glowMat, animators) {
 
     if (gMat) {
       gMat.emissiveIntensity = 0.35 + night * 1.45;
-    }
-
-    // ★ 隨光影自動調整畫面上方標題與引言的字體顏色與陰影對比度，避免背景色接近導致難以辨識
-    const appEl = document.getElementById("island-app");
-    if (appEl) {
-      const skyLum = 0.299 * skyTop.r + 0.587 * skyTop.g + 0.114 * skyTop.b;
-      const isDarkOrTwilight = night > 0.22 || skyLum < 0.58;
-      if (isDarkOrTwilight) {
-        // 晨曦彩霞、黃昏晚霞與星夜深藍背景：切換為高對比星光白與璀璨金字體＋深色立體光暈
-        appEl.style.setProperty("--hero-title", "#ffffff");
-        appEl.style.setProperty("--hero-sub", "#fff4dc");
-        appEl.style.setProperty("--hero-accent", "#ffe066");
-        appEl.style.setProperty("--hero-shadow", "0 2px 12px rgba(8, 12, 26, 0.92), 0 1px 4px rgba(0, 0, 0, 0.95)");
-        appEl.style.setProperty("--hero-bg", "rgba(15, 23, 42, 0.52)");
-        appEl.style.setProperty("--hero-border", "rgba(255, 255, 255, 0.18)");
-      } else {
-        // 白晝明亮淺藍天空與海面：切換為高對比濃墨黑與深暖棕字體＋明亮柔光暈
-        appEl.style.setProperty("--hero-title", "#1c1716");
-        appEl.style.setProperty("--hero-sub", "#3b302b");
-        appEl.style.setProperty("--hero-accent", "#c94e23");
-        appEl.style.setProperty("--hero-shadow", "0 2px 12px rgba(255, 252, 247, 0.96), 0 0 4px rgba(255, 255, 255, 0.92)");
-        appEl.style.setProperty("--hero-bg", "rgba(255, 250, 244, 0.45)");
-        appEl.style.setProperty("--hero-border", "rgba(33, 29, 29, 0.10)");
-      }
     }
   }
 
@@ -4516,7 +4474,7 @@ async function initBaliIslandsApp(initialLabels) {
   }
 
   // 更新總島嶼數顯示
-  $("#hero-island-count").textContent = trails.length;
+  if ($("#hero-island-count")) $("#hero-island-count").textContent = trails.length;
   $("#side-count-text").textContent = `${trails.length} 條學習步道 × 4 大核心素養`;
   $("#tab-trails").textContent = `學習步道 (${trails.length})`;
   $("#tab-flows").textContent = `跨域連結 (${DEFAULT_FLOWS.length})`;
@@ -4711,9 +4669,9 @@ async function initBaliIslandsApp(initialLabels) {
     labelRenderer.setSize(w, h);
 
     // 依據螢幕寬高動態計算 3D 島嶼立牌標籤的等比例縮放係數 (--label-scale)
-    const wRatio = w / 1180;
-    const hRatio = h / 720;
-    currentLabelScale = Math.max(0.52, Math.min(1.0, Math.min(wRatio, hRatio)));
+    const wRatio = w / 1080;
+    const hRatio = h / 680;
+    currentLabelScale = Math.max(0.66, Math.min(1.0, Math.min(wRatio, hRatio)));
     if (appRoot) {
       appRoot.style.setProperty("--label-scale", currentLabelScale.toFixed(3));
     }
@@ -4726,8 +4684,8 @@ async function initBaliIslandsApp(initialLabels) {
   function updateLabelAntiCollision() {
     const w = stage.clientWidth || window.innerWidth;
     const h = stage.clientHeight || window.innerHeight;
-    const boxW = 96 * currentLabelScale;
-    const boxH = 22 * currentLabelScale;
+    const boxW = 114 * currentLabelScale;
+    const boxH = 26 * currentLabelScale;
     const pts = labelItems.map(item => {
       projVec.copy(item.worldPos).project(camera);
       return {
