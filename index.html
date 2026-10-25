@@ -3513,23 +3513,193 @@ function buildIslandDiorama(THREE, kit, trail, center, animators) {
     });
 
   } else if (t === "mv") {
-    // 12 MV實驗室：戶外演唱會舞台＋發光LED大螢幕、巨型黑白場記板、專業攝影機與演出者
-    kit.addPart("rbox", [cx, TOP_Y + 0.12, cz - 0.35], [1.45, 0.22, 0.82], 0x333942);
-    kit.addPart("rbox", [cx, TOP_Y + 0.62, cz - 0.68], [1.38, 0.78, 0.12], 0x1e2229);
-    kit.addPart("box", [cx, TOP_Y + 0.62, cz - 0.61], [1.22, 0.62, 0.02], 0x5ce6b8, [0, 0, 0], true);
-    kit.addPart("rbox", [cx - 0.62, TOP_Y + 0.32, cz + 0.42], [0.58, 0.42, 0.08], 0x211d1d, [0, 0.35, 0]);
-    kit.addPart("rbox", [cx - 0.62, TOP_Y + 0.58, cz + 0.42], [0.60, 0.10, 0.09], 0xfcea8b, [0, 0.35, 0.18]);
-    kit.addPart("cyl", [cx + 0.45, TOP_Y + 0.24, cz + 0.48], [0.06, 0.44, 0.06], 0x444444);
-    kit.addPart("rbox", [cx + 0.45, TOP_Y + 0.48, cz + 0.48], [0.24, 0.2, 0.34], 0x2b3036, [0, -0.3, 0]);
+    // =========================================================
+    // ★ 12 MV實驗室：學生拿著剪刀裁切一捲長長的電影膠捲 3D 動畫
+    // =========================================================
+    // 1. 後方 MV 預覽螢幕與場記板背景
+    kit.addPart("rbox", [cx, TOP_Y + 0.56, cz - 0.68], [1.32, 0.72, 0.10], 0x1e2229);
+    kit.addPart("box", [cx, TOP_Y + 0.56, cz - 0.62], [1.16, 0.56, 0.02], 0x5ce6b8, [0, 0, 0], true);
+    // 左後側經典黑白場記板
+    kit.addPart("rbox", [cx - 0.68, TOP_Y + 0.28, cz - 0.35], [0.46, 0.34, 0.06], 0x211d1d, [0, 0.35, 0]);
+    kit.addPart("rbox", [cx - 0.68, TOP_Y + 0.49, cz - 0.35], [0.48, 0.08, 0.07], 0xfcea8b, [0, 0.35, 0.18]);
 
-    const singer = kit.makeActor({
-      x: cx, y: TOP_Y + 0.22, z: cz - 0.32, ry: 0, scale: 0.92,
-      shirt: 0xdb6a41, bottom: 0x211d1d
+    // 2. 前方長型電影膠捲剪輯工作台
+    const tableZ = cz + 0.28;
+    kit.addPart("rbox", [cx, TOP_Y + 0.14, tableZ], [1.46, 0.24, 0.44], 0x3b424c);
+    kit.addPart("rbox", [cx, TOP_Y + 0.27, tableZ], [1.40, 0.03, 0.38], 0xf5efe6); // 發光看片燈箱桌面
+
+    // 3. 左側巨型立體「電影膠捲母盤 (3D Film Reel)」支架與旋轉捲盤
+    const reelX = cx - 0.58, reelY = TOP_Y + 0.52, reelZ = tableZ;
+    kit.addPart("rbox", [reelX, TOP_Y + 0.38, reelZ - 0.08], [0.08, 0.28, 0.08], 0x2b3036);
+    const reelGroup = new THREE.Group();
+    reelGroup.position.set(reelX, reelY, reelZ);
+    if (islandGroup) islandGroup.add(reelGroup);
+
+    const metalMat = new THREE.MeshStandardMaterial({ color: 0xcfd6df, roughness: 0.35, metalness: 0.65 });
+    const filmRollMat = new THREE.MeshStandardMaterial({ color: 0x1e1b18, roughness: 0.5 });
+    // 捲盤前後金屬圓盤與內部厚膠捲層
+    const flangeF = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.018, 24).rotateX(Math.PI / 2), metalMat);
+    flangeF.position.z = 0.055;
+    const flangeB = flangeF.clone();
+    flangeB.position.z = -0.055;
+    const innerRoll = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.21, 0.09, 20).rotateX(Math.PI / 2), filmRollMat);
+    const centerHub = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.14, 16).rotateX(Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0xdb6a41 }));
+    reelGroup.add(flangeF, flangeB, innerRoll, centerHub);
+    // 捲盤上的 6 個經典圓孔與輻條
+    const holeMat = new THREE.MeshBasicMaterial({ color: 0x211d1d });
+    for (let k = 0; k < 6; k++) {
+      const a = (k * Math.PI) / 3;
+      const hole = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 0.13, 12).rotateX(Math.PI / 2), holeMat);
+      hole.position.set(Math.cos(a) * 0.145, Math.sin(a) * 0.145, 0);
+      reelGroup.add(hole);
+    }
+
+    // 4. 動態繪製「35mm 電影膠捲長條貼圖」（上下齒孔＋彩色連續電影畫格）
+    const filmCanvas = document.createElement("canvas");
+    filmCanvas.width = 512;
+    filmCanvas.height = 128;
+    const fctx = filmCanvas.getContext("2d");
+    fctx.fillStyle = "#181515";
+    fctx.fillRect(0, 0, 512, 128);
+    // 上下兩排白色膠捲齒孔 (Sprocket Holes)
+    fctx.fillStyle = "#fff8f4";
+    for (let x = 8; x < 512; x += 24) {
+      fctx.fillRect(x, 7, 12, 14);
+      fctx.fillRect(x, 107, 12, 14);
+    }
+    // 4 格繽紛電影畫格 (Frames)
+    const frameColors = ["#38bdf8", "#f59e0b", "#4ade80", "#f472b6"];
+    for (let i = 0; i < 4; i++) {
+      const fx = i * 128 + 8;
+      fctx.fillStyle = frameColors[i];
+      fctx.fillRect(fx, 26, 112, 76);
+      // 畫格內簡易風景與人物剪影
+      fctx.fillStyle = "rgba(255,255,255,0.85)";
+      fctx.beginPath();
+      fctx.arc(fx + 34, 48, 11, 0, Math.PI * 2);
+      fctx.fill();
+      fctx.fillStyle = "#1e293b";
+      fctx.fillRect(fx + 52, 54, 42, 48);
+    }
+    const filmTex = new THREE.CanvasTexture(filmCanvas);
+    filmTex.colorSpace = THREE.SRGBColorSpace;
+    filmTex.wrapS = THREE.RepeatWrapping;
+    filmTex.wrapT = THREE.ClampToEdgeWrapping;
+    filmTex.repeat.set(3.2, 1);
+
+    const filmStripMat = new THREE.MeshStandardMaterial({
+      map: filmTex,
+      roughness: 0.42,
+      side: THREE.DoubleSide
     });
+
+    // 建立從大捲盤拉出、橫跨剪輯台至右側的「長長波浪電影膠捲」
+    // 左段（母盤 → 剪刀裁切點 cx + 0.12）
+    const stripSegsL = 28;
+    const stripGeoL = new THREE.PlaneGeometry(0.72, 0.16, stripSegsL, 1);
+    const posL = stripGeoL.attributes.position;
+    for (let i = 0; i < posL.count; i++) {
+      const px = posL.getX(i); // -0.36 .. +0.36
+      const u = (px + 0.36) / 0.72; // 0(左端捲盤) .. 1(右端裁切處)
+      const curveY = (1 - u) * 0.18 + Math.sin(u * Math.PI * 2) * 0.035;
+      const curveZ = Math.sin(u * Math.PI) * 0.05;
+      posL.setY(i, posL.getY(i) * 0.25 + curveY);
+      posL.setZ(i, posL.getZ(i) * 0.85 + curveZ);
+    }
+    stripGeoL.computeVertexNormals();
+    const filmStripLeft = new THREE.Mesh(stripGeoL, filmStripMat);
+    filmStripLeft.position.set(cx - 0.22, TOP_Y + 0.34, tableZ);
+    if (islandGroup) islandGroup.add(filmStripLeft);
+
+    // 右段（剪刀裁切處 cx + 0.14 → 右側垂落捲曲的長膠捲尾端 cx + 0.66）
+    const stripGeoR = new THREE.PlaneGeometry(0.52, 0.16, 20, 1);
+    const posR = stripGeoR.attributes.position;
+    for (let i = 0; i < posR.count; i++) {
+      const px = posR.getX(i); // -0.26 .. +0.26
+      const u = (px + 0.26) / 0.52; // 0(裁切點) .. 1(右側尾端)
+      const curveY = -u * u * 0.12 + Math.sin(u * Math.PI * 2.5) * 0.03;
+      const curveZ = Math.cos(u * Math.PI) * 0.04;
+      posR.setY(i, posR.getY(i) * 0.25 + curveY);
+      posR.setZ(i, posR.getZ(i) * 0.85 + curveZ);
+    }
+    stripGeoR.computeVertexNormals();
+    const filmStripRight = new THREE.Mesh(stripGeoR, filmStripMat);
+    filmStripRight.position.set(cx + 0.42, TOP_Y + 0.34, tableZ);
+    if (islandGroup) islandGroup.add(filmStripRight);
+
+    // 5. 剪輯小學生（站在剪輯台後方，左手扶著長膠捲、右手拿著大剪刀開合裁切！）
+    const editorStu = kit.makeActor({
+      x: cx + 0.12, z: tableZ - 0.28, ry: 0, scale: 0.96,
+      shirt: 0xfcea8b, bottom: 0x2b4570, hat: "cap", hatColor: 0x2f6b45
+    });
+
+    // ★ 打造立體開合「3D 大剪刀 (Articulated 3D Scissors)」並掛載於獨立錨點（位於裁切點正上方，清楚醒目！）
+    const scissorsGroup = new THREE.Group();
+    scissorsGroup.position.set(cx + 0.14, TOP_Y + 0.38, tableZ + 0.02);
+    if (islandGroup) islandGroup.add(scissorsGroup);
+
+    const bladeSteelMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.25, metalness: 0.85 });
+    const handleRedMat  = new THREE.MeshStandardMaterial({ color: 0xe63946, roughness: 0.45 });
+    const pivotGoldMat  = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.3, metalness: 0.7 });
+
+    // 上刀片與上握環
+    const upperHalf = new THREE.Group();
+    const bladeUp = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.032, 0.012), bladeSteelMat);
+    bladeUp.position.set(0.08, 0.01, 0.006);
+    const ringUp = new THREE.Mesh(new THREE.TorusGeometry(0.048, 0.014, 10, 18), handleRedMat);
+    ringUp.position.set(-0.11, 0.038, 0.006);
+    upperHalf.add(bladeUp, ringUp);
+
+    // 下刀片與下握環
+    const lowerHalf = new THREE.Group();
+    const bladeLow = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.032, 0.012), bladeSteelMat);
+    bladeLow.position.set(0.08, -0.01, -0.006);
+    const ringLow = new THREE.Mesh(new THREE.TorusGeometry(0.048, 0.014, 10, 18), handleRedMat);
+    ringLow.position.set(-0.11, -0.038, -0.006);
+    lowerHalf.add(bladeLow, ringLow);
+
+    // 剪刀中心金色樞紐螺絲
+    const pivotPin = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.032, 12).rotateX(Math.PI / 2), pivotGoldMat);
+    scissorsGroup.add(upperHalf, lowerHalf, pivotPin);
+    // 讓剪刀朝向膠捲橫向裁切角度
+    scissorsGroup.rotation.y = -Math.PI * 0.38;
+
+    // 裁切瞬間的閃光星芒特效
+    const cutSpark = kit.addPart("oct", [cx + 0.14, TOP_Y + 0.36, tableZ + 0.04], [0.12, 0.12, 0.12], 0xffe066, [0, 0, 0], true);
+
     animators.push((dt, el) => {
-      singer.root.rotation.y = Math.sin(el * 2.5) * 0.45;
-      singer.armR.rotation.z = -2.1 + Math.sin(el * 7) * 0.35;
-      singer.bodyG.position.y = Math.abs(Math.sin(el * 6)) * 0.04;
+      // 1. 巨型電影膠捲母盤持續旋轉送料，膠捲貼圖向前捲動
+      reelGroup.rotation.z -= dt * 1.6;
+      filmTex.offset.x -= dt * 0.42;
+
+      // 2. 剪刀開合裁切循環（張開瞄準 → 咔嚓剪下 → 裁切段分離微彈）
+      const cutCycle = (el * 1.15) % 1; // 約 0.87 秒一刀
+      // openAngle: 0(完全閉合剪斷) .. 0.52(大大張開)
+      const openAngle = cutCycle < 0.55
+        ? (1 - cutCycle / 0.55) * 0.52
+        : ((cutCycle - 0.55) / 0.45) * 0.52;
+
+      upperHalf.rotation.z = openAngle;
+      lowerHalf.rotation.z = -openAngle;
+
+      // 剪刀隨學生右手上下微動裁切
+      const isSnip = cutCycle > 0.48 && cutCycle < 0.62;
+      scissorsGroup.position.y = TOP_Y + 0.37 - (0.52 - openAngle) * 0.08;
+
+      // 學生左手扶住膠捲、右手握剪刀施力並專注點頭
+      editorStu.armL.rotation.x = -1.25 + Math.sin(el * 3.5) * 0.08;
+      editorStu.armR.rotation.x = -1.35 - (0.52 - openAngle) * 0.65;
+      editorStu.headG.rotation.x = 0.18 + (0.52 - openAngle) * 0.22;
+
+      // 咔嚓剪斷瞬間：右側膠捲片段向右下微彈分離，並亮起裁切金色星芒
+      const dropProgress = cutCycle >= 0.52 ? (cutCycle - 0.52) / 0.48 : 0;
+      filmStripRight.position.x = (cx + 0.42) + Math.sin(dropProgress * Math.PI) * 0.05;
+      filmStripRight.position.y = (TOP_Y + 0.34) - Math.sin(dropProgress * Math.PI) * 0.04;
+      filmStripRight.rotation.z = -Math.sin(dropProgress * Math.PI) * 0.12;
+
+      const sparkScale = isSnip ? 0.14 : 0.001;
+      cutSpark.scale.set(sparkScale, sparkScale, sparkScale);
+      cutSpark.rotation.y += dt * 6;
     });
 
   } else if (t === "virtue") {
