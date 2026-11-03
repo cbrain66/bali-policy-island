@@ -1233,23 +1233,108 @@
     .dock button { min-height: 22px; font-size: 10px; padding: 2px 6px; }
     .dock button span.nm { font-size: 10px; max-width: 64px; }
   }
+
+  /* 校園 3D 立體底圖 (school-map.jpg) 座標對照彈窗 */
+  .map2d-box {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 18px 20px;
+    max-width: min(1040px, 94vw);
+    max-height: 90dvh;
+    width: 100%;
+    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .map2d-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .map2d-head h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+  }
+  .map2d-stage {
+    position: relative;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1.5px solid var(--line);
+    background: #dbe6ef;
+    aspect-ratio: 1862 / 1072;
+    max-height: calc(90dvh - 110px);
+    margin: 0 auto;
+  }
+  .map2d-stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .map2d-pin {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.16s ease;
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+  }
+  .map2d-pin:hover {
+    transform: translate(-50%, -104%) scale(1.1);
+    z-index: 15;
+  }
+  .map2d-pin-board {
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: clamp(10px, 1.05vw, 13px);
+    font-weight: 800;
+    border: 2px solid var(--pin-color, #a94b5c);
+    background: var(--pin-bg, #fff8f4);
+    color: var(--pin-font, #211d1d);
+    white-space: nowrap;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.22);
+  }
+  .map2d-pin-pole {
+    width: 2px;
+    height: var(--pin-len, 26px);
+    background: var(--pin-color, #a94b5c);
+  }
+  .map2d-pin-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--pin-color, #a94b5c);
+    border: 1.5px solid #fff;
+  }
 </style>
 
 <div id="island-app">
-  <div id="stage" role="img" aria-label="14 座六角形浮空島嶼組成的八里新育學習步道 3D 群島"></div>
+  <div id="stage" role="img" aria-label="八里山海與 2.4 公頃八里國小立體智慧創客校園"></div>
 
   <!-- 左上品牌標題 -->
   <header class="brand">
     <div class="brand-r">
-      <h1 onclick="window.resetIslandCamera && window.resetIslandCamera(); return false;">八里新育 <em>14 ISLANDS</em> 學習步道群島</h1>
-      <p class="candidate">新的教育 心的教育 欣的教育 馨的教育</p>
+      <h1 onclick="window.resetIslandCamera && window.resetIslandCamera(); return false;">八里新育 <em>SMART CAMPUS</em> 立體智慧校園</h1>
+      <p class="candidate">新的教育・心的教育・欣的教育・馨的教育</p>
     </div>
   </header>
 
-  <!-- 左側引言 -->
+  <!-- 左側辦學理念與四道六能引言 -->
   <div class="hero-note">
-    <h2>一套智慧創客晶片模組學習學道<br>一座探索之島</h2>
-    <p>行素養四道，展學識六能<br>自我領航，智慧人做創客，適配幸福人生</p>
+    <h2>一套智慧創客晶片模組學習學道<br>2.4 公頃八里山海探索校園</h2>
+    <p><strong>行素養四道</strong>：人道・師道・學道・識道<br><strong>展學識六能</strong>：能傳道・能授業・能解惑・能領航・能創價・能進升<br>自我領航，智慧人做創客，適配幸福人生</p>
   </div>
 
   <!-- 右上工具列 -->
@@ -1257,8 +1342,9 @@
     <button class="team-cta" onclick="showTeamView(); return false;" title="切換至八里新育課程設計團隊">
       ✨ 課程設計團隊
     </button>
-    <button id="btn-home" title="回到群島全景">↗ 全景總覽</button>
-    <button id="btn-sidebar-toggle" aria-pressed="true" title="顯示或隱藏最右邊的「步道，連起來。」資訊欄">☰ 步道清單</button>
+    <button id="btn-map2d" title="檢視八里國小原始 3D 校園立體底圖 (school-map.jpg) 與學道座標">🗺️ 校園立體底圖</button>
+    <button id="btn-home" title="回到 2.4 公頃立體校園全景">↗ 全景總覽</button>
+    <button id="btn-sidebar-toggle" aria-pressed="true" title="顯示或隱藏最右邊的「八里學道，連起來。」資訊欄">☰ 學道清單</button>
     <button id="btn-help" title="操作說明">?</button>
   </nav>
 
@@ -1271,27 +1357,27 @@
       <button type="button" data-time="1260" title="星夜 21:00">🌙 星夜</button>
     </div>
     <div class="tool-group" role="group" aria-label="3D 檢視切換">
-      <button type="button" id="tg-flows" aria-pressed="true" title="顯示或隱藏跨島課程連結光軌">🔗 跨域線</button>
-      <button type="button" id="tg-tour" aria-pressed="false" title="自動環島巡禮導覽">🚀 巡禮</button>
+      <button type="button" id="tg-flows" aria-pressed="true" title="顯示或隱藏學道間跨域課程連結光軌">🔗 跨域線</button>
+      <button type="button" id="tg-tour" aria-pressed="false" title="自動環校巡禮導覽 14 條學道">🚀 巡禮</button>
       <button type="button" id="tg-bird" aria-pressed="false" title="切換俯瞰或立體視角">🐦 俯瞰</button>
       <button type="button" id="tg-freeze" aria-pressed="false" title="暫停或恢復動態效果">✋ 暫停</button>
     </div>
   </div>
 
   <!-- 吉祥物導覽提示 -->
-  <div class="mascot" id="mascot-pill" title="點擊飛向或跟隨「八里柚寶」3D 領航員玩偶！">
+  <div class="mascot" id="mascot-pill" title="點擊飛向或跟隨「八里柚寶」3D 校園領航員玩偶！">
     <img id="mascot-pill-img" class="mascot-ico" alt="八里柚寶" src="">
     <span class="face">八里柚寶</span>
-    <span id="mascot-text">點擊尋找島上漫步的 3D 柚子領航員與小學生們！</span>
+    <span id="mascot-text">點擊跟隨在校園紅磚步道巡視的 3D 八里柚寶與小學生們！</span>
   </div>
 
   <!-- 底部多合一控制面板 -->
   <section class="controls" aria-label="時間與主題篩選">
     <div class="control-tabs" role="tablist">
       <button type="button" class="active" data-panel="day">01 校園一日光影</button>
-      <button type="button" data-panel="colors">02 四大色系群組</button>
-      <button type="button" data-panel="bali">03 B.A.L.I. 新育四力</button>
-      <div class="status" id="status-note">14 座步道島嶼・點擊島嶼可聚焦與進入網站</div>
+      <button type="button" data-panel="bali">02 行・素養四道</button>
+      <button type="button" data-panel="colors">03 處室色系分類</button>
+      <div class="status" id="status-note">2.4 公頃立體校園・14 條智慧創客學習學道</div>
     </div>
 
     <!-- Panel 1: 一日光影 -->
@@ -1301,42 +1387,42 @@
         <output id="clock-output">12:00</output>
         <input id="day-slider" type="range" min="0" max="1439" value="720" aria-label="校園時間軸">
       </div>
-      <p class="control-note" id="day-note">☀️ 正午陽光灑落八里校園與十三行海岸，14 座學習步道島嶼充滿蓬勃朝氣。</p>
+      <p class="control-note" id="day-note">☀️ 正午陽光灑落觀音山麓與 2.4 公頃八里國小太陽能校舍，14 條智慧創客學道充滿蓬勃朝氣。</p>
     </div>
 
-    <!-- Panel 2: 原試算表四大色系 -->
-    <div class="panel" id="panel-colors">
-      <div class="pill-buttons" id="color-buttons"></div>
-      <p class="control-note">對應 Google 試算表「Locate」工作表設定之立牌色系，點擊可篩選高亮對應之步道島嶼。</p>
-    </div>
-
-    <!-- Panel 3: B.A.L.I. 新育四力 -->
+    <!-- Panel 2: 行・素養四道 -->
     <div class="panel" id="panel-bali">
       <div class="pill-buttons" id="bali-buttons"></div>
-      <p class="control-note">可複選新育核心素養（B｜活力堅毅(Body &amp; Brave)・A｜國際文史(Art &amp; Culture)・L｜心靈共融(Love &amp; Care)・I｜創客永續(Innovation &amp; Green)）。</p>
+      <p class="control-note">行素養四道（人道・師道・學道・識道），展學識六能（能傳道・能授業・能解惑・能領航・能創價・能進升）。</p>
+    </div>
+
+    <!-- Panel 3: 原試算表處室色系 -->
+    <div class="panel" id="panel-colors">
+      <div class="pill-buttons" id="color-buttons"></div>
+      <p class="control-note">依負責處室與 Google 試算表「Locate」工作表設定之立牌色系分類，點擊可篩選高亮對應之學道據點。</p>
     </div>
   </section>
 
-  <!-- 底部 14 島快速導覽列 -->
-  <nav class="dock" id="dock" aria-label="快速前往各學習步道島嶼"></nav>
+  <!-- 底部 14 條學道快速導覽列 -->
+  <nav class="dock" id="dock" aria-label="快速前往各學習學道據點"></nav>
 
   <!-- 右側清單欄 -->
-  <aside id="sidebar" class="sidebar" aria-label="學習步道與跨域清單">
+  <aside id="sidebar" class="sidebar" aria-label="學習學道與跨域清單">
     <div class="side-head">
-      <div class="eyebrow">THE TRAIL ARCHIPELAGO</div>
-      <h2>步道，連起來。</h2>
-      <p><span id="side-count-text">14 條學習步道 × 4 大核心素養</span><br>選一條步道，飛向它的專屬 3D 島嶼。</p>
-      <input id="search-input" class="search" type="search" placeholder="搜尋步道名稱、主題關鍵字…">
+      <div class="eyebrow">BALI SMART-MAKER 3D CAMPUS</div>
+      <h2>八里學道，連起來。</h2>
+      <p><span id="side-count-text">14 條智慧創客學道 × 素養四道</span><br>依真實校園 (X, Y) 座標座落於 2.4 公頃立體校園。</p>
+      <input id="search-input" class="search" type="search" placeholder="搜尋學道名稱、素養四道、主題關鍵字…">
       <div class="side-tabs">
-        <button type="button" id="tab-trails" class="active">學習步道 (14)</button>
+        <button type="button" id="tab-trails" class="active">學習學道 (14)</button>
         <button type="button" id="tab-flows">跨域連結 (12)</button>
       </div>
     </div>
     <div id="tree-list" class="tree"></div>
   </aside>
 
-  <!-- 島嶼詳細資訊滑出卡片 -->
-  <article id="detail-card" class="card" hidden aria-label="步道詳細資訊">
+  <!-- 學道詳細資訊滑出卡片 -->
+  <article id="detail-card" class="card" hidden aria-label="學道詳細資訊">
     <button type="button" class="close" id="card-close" title="關閉資訊卡">×</button>
     <div id="card-content"></div>
   </article>
@@ -1348,7 +1434,7 @@
       <img id="mascot-info-img" alt="八里柚寶" src="">
       <div>
         <h3>八里柚寶</h3>
-        <p>校園規模與概況</p>
+        <p>校園規模與辦學核心</p>
       </div>
     </div>
     <ul class="mascot-stat-list">
@@ -1356,28 +1442,47 @@
       <li class="mascot-stat-item"><span class="k">學生：</span><span class="v">611人</span></li>
       <li class="mascot-stat-item"><span class="k">教師：</span><span class="v">54人</span></li>
       <li class="mascot-stat-item"><span class="k">校地：</span><span class="v">2.4公頃</span></li>
+      <li class="mascot-stat-item" style="grid-column: 1 / -1;"><span class="k">素養四道：</span><span class="v" style="font-size:12.5px;">人道・師道・學道・識道</span></li>
+      <li class="mascot-stat-item" style="grid-column: 1 / -1;"><span class="k">學識六能：</span><span class="v" style="font-size:12px;">能傳道・能授業・能解惑・能領航・能創價・能進升</span></li>
     </ul>
   </aside>
+
+  <!-- 校園 3D 立體底圖 (school-map.jpg) 座標對照彈窗 -->
+  <div id="map2d-modal" class="modal-backdrop" hidden>
+    <div class="map2d-box" role="dialog" aria-modal="true" aria-label="八里國小 3D 校園立體底圖與原始座標">
+      <div class="map2d-head">
+        <div>
+          <div class="eyebrow" style="color: var(--coral);">ORIGINAL 3D CAMPUS MAP / 原始校園立體圖座標對照</div>
+          <h3>八里國小 2.4 公頃校園立體圖（點擊任一學道立牌可飛往 3D 據點）</h3>
+        </div>
+        <button type="button" id="map2d-close" style="background: var(--ink); color: var(--cream); font-weight: 800;">關閉底圖 ×</button>
+      </div>
+      <div class="map2d-stage" id="map2d-stage">
+        <img id="map2d-img" src="./school-map.jpg" onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='https://ando202602.github.io/bali-policy-island/school-map.jpg';}" alt="八里國小 3D 校園立體圖">
+        <div id="map2d-pins"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- 操作說明彈窗 -->
   <div id="help-modal" class="modal-backdrop" hidden>
     <div class="modal-box" role="dialog" aria-modal="true">
       <div class="eyebrow" style="color: var(--coral);">HOW TO EXPLORE / 探索指南</div>
-      <h2>八里新育 3D 學習步道群島</h2>
+      <h2>八里新育｜2.4 公頃立體智慧創客校園</h2>
       <ul>
-        <li><strong>旋轉與縮放</strong>：按住滑鼠左鍵拖曳可 360° 旋轉視角；滾輪或雙指可放大觀察島上微縮建築。</li>
-        <li><strong>探索步道島嶼</strong>：點擊任一座「3D 島嶼」、「島上立牌」或右側「步道清單」，鏡頭將平滑飛向該島並開啟介紹卡片。</li>
-        <li><strong>前往步道網站</strong>：點擊資訊卡下方的「🚀 前往步道網站」按鈕，即可開啟該步道的 Google 協作平台。</li>
-        <li><strong>光影與課程推手</strong>：下方可調整晨昏星夜光影；點擊右上角「✨ 課程設計團隊」可查看課程推手群像。</li>
+        <li><strong>山海與校園全景</strong>：按住滑鼠左鍵拖曳可 360° 飽覽觀音山文旦柚林、淡水河左岸、淡江大橋與 2.4 公頃太陽能立體校園。</li>
+        <li><strong>探索 14 條智慧創客學道</strong>：點擊校園內任一座「3D 學道據點」、「上方立牌」或右側「學道清單」，鏡頭將平滑飛向該教學場域並開啟介紹卡片。</li>
+        <li><strong>素養四道與處室分類</strong>：下方控制面板可依「行・素養四道（人道・師道・學道・識道）」或「處室色系」篩選高亮對應學道。</li>
+        <li><strong>原始校園立體底圖與課程推手</strong>：點擊右上角「🗺️ 校園立體底圖」可對照 `school-map.jpg` 原始座標；點擊「✨ 課程設計團隊」可查看課程推手群像。</li>
       </ul>
-      <button type="button" id="help-close" style="width: 100%; background: var(--ink); color: var(--cream); font-weight: 800;">開始探索群島 →</button>
+      <button type="button" id="help-close" style="width: 100%; background: var(--ink); color: var(--cream); font-weight: 800;">開始探索智慧校園 →</button>
     </div>
   </div>
 
   <!-- 載入畫面 -->
   <div id="loading-screen" class="loading-overlay" role="status">
-    <h2>BALI ISLANDS</h2>
-    <p>正在組合 14 座 3D 學習步道浮空島嶼…</p>
+    <h2>BALI SMART CAMPUS</h2>
+    <p>正在建構八里山海與 2.4 公頃立體智慧創客校園…</p>
   </div>
 </div>
 
@@ -1423,21 +1528,21 @@ const HEX_AXIAL_COORDS = [
   [-2, 5],  // 14 環保在心，綠動八里
 ];
 
-// B.A.L.I. 新育四大核心素養定義
+// 素養四道（人道、師道、學道、識道）定義 — 呼應「行素養四道，展學識六能」
 const BALI_PILLARS = {
-  B: { id: "B", code: "B", name: "B｜活力堅毅", en: "Body & Brave", color: "#A94B5C", desc: "強健體魄、防救災韌性與好品格修練" },
-  A: { id: "A", code: "A", name: "A｜國際文史", en: "Art & Culture", color: "#8A7A2F", desc: "在地紅磚走讀、多元族群文化與國際視野" },
-  L: { id: "L", code: "L", name: "L｜心靈共融", en: "Love & Care", color: "#356B73", desc: "情緒覺察、慈孝感恩與有愛無礙共融校園" },
-  I: { id: "I", code: "I", name: "I｜創客永續", en: "Innovation & Green", color: "#2F6B45", desc: "動手做創客、匠心模型、影音傳播與綠能環保" }
+  REN: { id: "REN", code: "人道", name: "人道｜品格韌性", en: "品格・防災・強身・綠動", color: "#A94B5C", desc: "好品同行、防救災韌性、紅土強身與環境永續行動" },
+  SHI: { id: "SHI", code: "師道", name: "師道｜文化領航", en: "紅磚・慈孝・國際領航", color: "#8A7A2F", desc: "百年紅磚文化傳承、慈孝感恩惜福與國際雙語領航" },
+  XUE: { id: "XUE", code: "學道", name: "學道｜定靜匠心", en: "神射・匠心・情緒・共融", color: "#356B73", desc: "神射定靜專注、手作匠心模型、情緒覺察與有愛無礙共融" },
+  ZHI: { id: "ZHI", code: "識道", name: "識道｜創客跨域", en: "多元・創客・媒體識讀", color: "#2F6B45", desc: "多元文化視野、創客百寶箱數位自造與 MV 媒體識讀敘事" }
 };
 
-// 每條步道的豐富預設內容（主題模型、地面材質、簡介、三大課程亮點、BALI 分類）
+// 每條步道的豐富預設內容（主題模型、地面材質、簡介、三大課程亮點、素養四道分類）
 const TRAIL_PRESETS = [
   {
     match: "紅土",
     theme: "baseball",
-    ground: "meadow",
-    bali: ["B"],
+    ground: "clayfield",
+    bali: ["REN", "XUE"],
     summary: "在八里紅土球場揮灑汗水，從每一次投球、揮棒與守備補位中，鍛鍊永不放棄的運動家精神與團隊默契。",
     highlights: ["紅土球場投球與揮棒擊球實戰訓練", "戰術思維與團隊守備默契養成", "運動防護知識與運動家品格修練"]
   },
@@ -1445,7 +1550,7 @@ const TRAIL_PRESETS = [
     match: "神射",
     theme: "archery",
     ground: "lawn",
-    bali: ["B"],
+    bali: ["XUE", "REN"],
     summary: "拉滿弓弦、屏息凝神，在「心正則箭直」百步穿楊射中靶心的定靜練習裡，培養沉著冷靜的抗壓性與自我覺察力。",
     highlights: ["反曲弓射箭禮儀與拉弓瞄準標準架勢", "呼吸調節與百步穿楊定靜專注力訓練", "拋物線力學探究與靶心積分挑戰賽"]
   },
@@ -1453,7 +1558,7 @@ const TRAIL_PRESETS = [
     match: "防災",
     theme: "prevention",
     ground: "granite",
-    bali: ["B", "I"],
+    bali: ["REN", "ZHI"],
     summary: "落實校園地震避難「趴下、掩護、穩住」演練，結合八里地形建構防災韌性網，培養學子守護自己與他人的應變力。",
     highlights: ["地震避難三步驟：趴下、掩護、穩住實戰演練", "急救包紮、CPR與AED防救災技能實作", "八里校園與社區防災避難地圖踏查"]
   },
@@ -1461,7 +1566,7 @@ const TRAIL_PRESETS = [
     match: "萬花筒",
     theme: "multicultural",
     ground: "terracotta",
-    bali: ["A", "L"],
+    bali: ["ZHI", "SHI"],
     summary: "轉動繽紛的文化萬花筒，認識世界各國多元文化地標、傳統服飾與特色風情，學會欣賞差異、溫柔擁抱世界。",
     highlights: ["世界各國代表建築與多元文化意象探索", "多國特色飲食、傳統服飾與節慶體驗", "跨文化理解、尊重包容與國際共好行動"]
   },
@@ -1469,7 +1574,7 @@ const TRAIL_PRESETS = [
     match: "國際航線",
     theme: "voyage",
     ground: "boardwalk",
-    bali: ["A"],
+    bali: ["SHI", "ZHI"],
     summary: "以國際教育與沉浸式雙語生活情境為核心，透過外師日常對話、跨國視訊交流與全球議題探索，讓孩子自信開口說英語、與世界接軌。",
     highlights: ["沉浸式雙語生活情境與日常英語對話互動", "跨國視訊連線交流與國際學伴共學", "國際教育議題探究與全球公民素養養成"]
   },
@@ -1477,7 +1582,7 @@ const TRAIL_PRESETS = [
     match: "紅磚",
     theme: "redbrick",
     ground: "redbrick",
-    bali: ["A"],
+    bali: ["SHI"],
     summary: "以校內珍貴的「御大禮紀念碑」與「紅磚教室」兩大文化資產為主軸，承載著歷史痕跡與世代知識傳承，帶領學子走讀校園百年人文底蘊。",
     highlights: ["認識校內「御大禮紀念碑」歷史淵源與碑文意涵", "探訪校園「紅磚教室」建築工藝與歲月痕跡", "校園文化資產守護與跨世代知識傳承導覽"]
   },
@@ -1485,7 +1590,7 @@ const TRAIL_PRESETS = [
     match: "創客",
     theme: "maker",
     ground: "rubber",
-    bali: ["I", "A"],
+    bali: ["ZHI", "XUE"],
     summary: "打開八里囡仔的創客百寶箱，透過學生動手實作與永動機械結構探究，把腦海中的奇思妙想化為解決問題的創意作品。",
     highlights: ["動手做木工、雷切與 3D 列印數位自造", "齒輪連桿與永動機械結構原理實作", "機電整合控制與生活問題解決創作"]
   },
@@ -1493,7 +1598,7 @@ const TRAIL_PRESETS = [
     match: "情緒",
     theme: "emotion",
     ground: "pastel",
-    bali: ["L"],
+    bali: ["XUE", "REN"],
     summary: "每一種情緒都是內心珍貴的信使，透過覺察、接納與和平溝通練習，成為懂得溫柔照顧自己與友善對待他人的情緒魔法師。",
     highlights: ["情緒光譜辨識與探索牌卡互動", "正念呼吸減壓與安定靜心練習", "非暴力溝通與同儕和平友善互動"]
   },
@@ -1501,7 +1606,7 @@ const TRAIL_PRESETS = [
     match: "慈孝",
     theme: "filial",
     ground: "courtyard",
-    bali: ["L"],
+    bali: ["SHI", "REN"],
     summary: "以感恩與惜福為起點，透過奉茶敬老與貼心陪伴長輩，將孝親尊長落實在日常點滴中，讓溫暖家庭價值世代傳承。",
     highlights: ["奉茶感恩禮儀與親情關懷行動", "傾聽家中長輩生命故事與貼心陪伴", "家庭感恩實踐與社區關懷敬老服務"]
   },
@@ -1509,7 +1614,7 @@ const TRAIL_PRESETS = [
     match: "模型",
     theme: "model",
     ground: "street",
-    bali: ["I", "L"],
+    bali: ["XUE", "ZHI"],
     summary: "一刀一磨、一筆一畫，在學生親手組裝模型、打磨與精細塗裝的過程中，磨練極致的耐心、立體空間感與職人匠心。",
     highlights: ["精密模型零件剪裁、組裝與無縫打磨", "色彩調配、噴筆塗裝與舊化細節表現", "微縮場景故事構圖與匠心作品策展"]
   },
@@ -1517,7 +1622,7 @@ const TRAIL_PRESETS = [
     match: "有愛無礙",
     theme: "inclusive",
     ground: "softpad",
-    bali: ["L"],
+    bali: ["XUE", "REN"],
     summary: "打破有形與無形的環境藩籬，主動協助推輪椅陪伴行動不便同儕，透過共融學習讓每個獨特生命都能自信發光、彼此扶持。",
     highlights: ["同理心行動：協助推輪椅與陪伴身障同儕", "校園無障礙設施踏查與多元障別體驗", "勇者無懼生命教育與普特共融友善校園"]
   },
@@ -1525,7 +1630,7 @@ const TRAIL_PRESETS = [
     match: "MV",
     theme: "mv",
     ground: "stagepad",
-    bali: ["I", "A"],
+    bali: ["ZHI", "SHI"],
     summary: "結合音樂律動、影像敘事與數位剪輯，讓學生化身導演、攝影師與演出者，用鏡頭記錄青春、為八里發聲。",
     highlights: ["分鏡腳本企劃與視覺敘事構圖", "動態攝影運鏡與綠幕棚拍實作", "數位影音剪輯、配樂與首映會"]
   },
@@ -1533,7 +1638,7 @@ const TRAIL_PRESETS = [
     match: "好品",
     theme: "virtue",
     ground: "schoolyard",
-    bali: ["B", "L"],
+    bali: ["REN", "SHI"],
     summary: "以良好品格為人生的羅盤，在日常中主動協助資源回收、熱心牽引低年級小朋友安全進出校門，與夥伴攜手同行。",
     highlights: ["日常環保實踐：主動協助校園資源回收分類", "大手牽小手：熱心護送低年級小朋友安全進出校門", "好品核心價值思辨與八里好品之星典範表揚"]
   },
@@ -1541,7 +1646,7 @@ const TRAIL_PRESETS = [
     match: "環保",
     theme: "green",
     ground: "forest",
-    bali: ["I", "B"],
+    bali: ["REN", "ZHI"],
     summary: "從校園屋頂太陽能到八里山海生態保育，將環保意識化為每日的綠色行動，共創減碳永續的生態家園。",
     highlights: ["校園太陽能光電與再生能源探究", "減塑行動、落葉堆肥與資源循環", "八里挖子尾濕地與山林生態守護"]
   }
@@ -1596,12 +1701,13 @@ function getAxialForIndex(idx) {
 
 function enrichTrailData(rawLabels) {
   const list = (Array.isArray(rawLabels) && rawLabels.length > 0) ? rawLabels : DEFAULT_SHEET_LABELS;
+  const codeAlias = { "人道": "REN", "師道": "SHI", "學道": "XUE", "識道": "ZHI", "B": "REN", "A": "SHI", "L": "XUE", "I": "ZHI" };
   return list.map((item, idx) => {
     const preset = TRAIL_PRESETS.find(p => item.text && item.text.includes(p.match)) || TRAIL_PRESETS[idx % TRAIL_PRESETS.length];
     const pColor = (item.poleColor || "#A94B5C").toUpperCase();
     let bali = [...preset.bali];
     if (item.category) {
-      const customBali = item.category.toUpperCase().split(/[,、\s]+/).filter(x => BALI_PILLARS[x]);
+      const customBali = item.category.split(/[,、\s]+/).map(x => codeAlias[x.trim()] || x.trim().toUpperCase()).filter(x => BALI_PILLARS[x]);
       if (customBali.length) bali = customBali;
     }
     let highlights = [...preset.highlights];
@@ -1617,6 +1723,9 @@ function enrichTrailData(rawLabels) {
       text: item.text || `學習步道 ${idx + 1}`,
       url: item.url || "#",
       target: item.target || "_blank",
+      sheetX: Number(item.x) || 820,
+      sheetY: Number(item.y) || 540,
+      poleLength: Number(item.poleLength) || 120,
       poleColor: pColor,
       bgColor: item.bgColor || "#FFF8F4",
       fontColor: item.fontColor || "#211D1D",
@@ -1630,15 +1739,52 @@ function enrichTrailData(rawLabels) {
   });
 }
 
+// 將試算表中的八里國小 3D 校園立體圖 (school-map.jpg: 1862×1072) 原始 (X, Y) 座標
+// 1:1 轉換為 2.4 公頃 3D 立體智慧校園上的真實空間座標，並做微幅間距鬆弛避免 3D 劇場模組重疊
+function computeCampusCenters(THREE, trails, topY) {
+  const coords = trails.map((t, i) => {
+    const sx = t.sheetX || (420 + (i % 4) * 260);
+    const sy = t.sheetY || (240 + Math.floor(i / 4) * 200);
+    return [(sx - 820) * 0.021, (sy - 540) * 0.023];
+  });
+  const minDist = 3.85;
+  for (let iter = 0; iter < 90; iter++) {
+    for (let i = 0; i < coords.length; i++) {
+      for (let j = i + 1; j < coords.length; j++) {
+        const dx = coords[j][0] - coords[i][0];
+        const dz = coords[j][1] - coords[i][1];
+        const d = Math.hypot(dx, dz);
+        if (d < minDist && d > 1e-4) {
+          const push = (minDist - d) * 0.35;
+          coords[i][0] -= (dx / d) * push;
+          coords[i][1] -= (dz / d) * push;
+          coords[j][0] += (dx / d) * push;
+          coords[j][1] += (dz / d) * push;
+        }
+      }
+    }
+  }
+  let avgX = 0, avgZ = 0;
+  for (const c of coords) { avgX += c[0]; avgZ += c[1]; }
+  avgX /= Math.max(1, coords.length);
+  avgZ /= Math.max(1, coords.length);
+
+  const out = new Map();
+  trails.forEach((t, i) => {
+    out.set(t.id, new THREE.Vector3(coords[i][0] - avgX, topY, coords[i][1] - avgZ));
+  });
+  return out;
+}
+
 
 // =========================================================
-// PART 3: 3D 世界、淡江大橋(單塔不對稱斜張橋)、六角浮空島嶼與環境系統
+// PART 3: 3D 世界、觀音山文旦柚林、淡水河左岸、淡江大橋與 2.4 公頃立體校園環境
 // =========================================================
 
-const R_HEX = 2.04;
+const R_HEX = 1.72;
 const SPACING_HEX = 2.30;
 const TOP_Y = 0.65;
-const RING_R = 1.78;
+const RING_R = 1.48;
 const WATER_Y = -0.18;
 const SQ3 = Math.sqrt(3);
 const HEX_NEIGHBORS = [
@@ -1799,7 +1945,7 @@ function cliffGeometry(THREE, cx, cz, r, yTop, yBot, poleColorHex) {
 // =========================================================
 function createDanjiangBridgeVista(THREE, scene, cityCenter, glowMat, animators) {
   const cx = cityCenter.x;
-  const bz = cityCenter.z - 12.8; // 位於群島正後方河海交界處，鏡頭一進入即可飽覽
+  const bz = cityCenter.z - 17.5; // 位於 2.4 公頃立體校園後方淡水河出海口，鏡頭一進入即可飽覽山河橋景
   const vistaGroup = new THREE.Group();
   scene.add(vistaGroup);
 
@@ -1808,8 +1954,9 @@ function createDanjiangBridgeVista(THREE, scene, cityCenter, glowMat, animators)
   const hillMat  = new THREE.MeshStandardMaterial({ color: 0x7c9a68, roughness: 0.92, flatShading: true });
   const shallowMat = new THREE.MeshBasicMaterial({ color: 0xb4dede, transparent: true, opacity: 0.5, depthWrite: false });
   const foamMat = new THREE.MeshBasicMaterial({ color: 0xf7fcfb, transparent: true, opacity: 0.6, depthWrite: false });
+  const pomeloFruitMat = new THREE.MeshStandardMaterial({ color: 0xd4dc55, roughness: 0.65 });
 
-  // 建立背景左右兩座岸島（左：八里觀音山岸島、右：淡水夕照岸島）
+  // 建立背景左右兩座岸島（左：八里觀音山脈與文旦柚果園岸島、右：淡水夕照岸島）
   function buildBackdropIsland(ix, iz, radiusX, radiusZ, peakH, isLeft) {
     const ig = new THREE.Group();
     ig.position.set(ix, 0, iz);
@@ -1852,21 +1999,30 @@ function createDanjiangBridgeVista(THREE, scene, cityCenter, glowMat, animators)
     p2.position.set(isLeft ? 0.6 : -0.6, TOP_Y + peakH * 0.32, -1.6);
     ig.add(p2);
 
-    // 點綴低多邊形林木與河岸建築
+    // 點綴低多邊形林木（左岸特別配置八里特色「文旦柚果樹林」）
     const treeMat = new THREE.MeshStandardMaterial({ color: 0x6b8c56, roughness: 0.88, flatShading: true });
-    for (let i = 0; i < 9; i++) {
-      const a = (i / 9) * Math.PI * 2;
-      const r = radiusX * (0.35 + (i % 3) * 0.16);
-      const tm = new THREE.Mesh(new THREE.ConeGeometry(0.32, 0.75, 6), treeMat);
-      tm.position.set(Math.cos(a) * r, TOP_Y + 0.55, Math.sin(a) * r * (radiusZ / radiusX));
+    for (let i = 0; i < 11; i++) {
+      const a = (i / 11) * Math.PI * 2;
+      const r = radiusX * (0.32 + (i % 3) * 0.16);
+      const tx = Math.cos(a) * r;
+      const tz = Math.sin(a) * r * (radiusZ / radiusX);
+      const tm = new THREE.Mesh(new THREE.ConeGeometry(0.34, 0.78, 6), treeMat);
+      tm.position.set(tx, TOP_Y + 0.56, tz);
       ig.add(tm);
+      if (isLeft && i % 2 === 0) {
+        for (const [fx, fy, fz] of [[0.14, 0.46, 0.12], [-0.12, 0.55, 0.10], [0.05, 0.64, -0.12]]) {
+          const pom = new THREE.Mesh(new THREE.SphereGeometry(0.065, 8, 6), pomeloFruitMat);
+          pom.position.set(tx + fx, TOP_Y + fy, tz + fz);
+          ig.add(pom);
+        }
+      }
     }
   }
 
-  const leftIslandX = cx - 11.8;
-  const rightIslandX = cx + 11.8;
-  buildBackdropIsland(leftIslandX, bz, 4.6, 3.2, 4.8, true);   // 左岸：八里觀音山岸島
-  buildBackdropIsland(rightIslandX, bz, 4.4, 3.1, 3.6, false); // 右岸：淡水岸島
+  const leftIslandX = cx - 13.6;
+  const rightIslandX = cx + 13.6;
+  buildBackdropIsland(leftIslandX, bz, 5.2, 3.6, 5.4, true);   // 左岸：八里觀音山與文旦柚果園岸島
+  buildBackdropIsland(rightIslandX, bz, 4.6, 3.2, 3.8, false); // 右岸：淡水岸島
 
   // ─────────────────────────────────────────────────────────
   // ★ 淡江大橋（Danjiang Bridge）— 單塔不對稱斜張橋主體
@@ -3621,10 +3777,10 @@ function buildIslandDiorama(THREE, kit, trail, center, animators) {
 
 
 // =========================================================
-// PART 5: 群島組裝、跨島路網、「maimrole.png 八里柚寶 3D 玩偶」與「各種小學生 3D 玩偶」
+// PART 5: 2.4 公頃八里國小立體智慧校園組裝、校園紅磚與晶片光軌路網、「八里柚寶 3D 玩偶」與「28 位小學生 3D 玩偶」
 // =========================================================
 
-// 建立跨島與環島行人路網 (Pedestrian Graph across all 14 islands + bridges)
+// 建立校園內 14 座學道據點之間的行人步道網 (Pedestrian Graph across the 2.4-hectare campus)
 function buildPedestrianGraph(THREE, trails, centers, neighbors) {
   const nodes = [];
   const adj = [];
@@ -3656,9 +3812,8 @@ function buildPedestrianGraph(THREE, trails, centers, neighbors) {
     ringIndex.set(t.id, ids);
   }
 
-  const midFor = (id, dq, dr) => {
+  const midForDir = (id, dx, dz) => {
     const c = centers.get(id);
-    const [dx, dz] = dirOf(dq, dr);
     const ids = ringIndex.get(id);
     let best = ids[1], bd = 1e9;
     for (let k = 1; k < 12; k += 2) {
@@ -3675,8 +3830,8 @@ function buildPedestrianGraph(THREE, trails, centers, neighbors) {
   for (const [id, nbList] of neighbors) {
     for (const n of nbList) {
       if (n.id && id < n.id) {
-        const na = midFor(id, n.dq, n.dr);
-        const nb = midFor(n.id, -n.dq, -n.dr);
+        const na = midForDir(id, n.dx, n.dz);
+        const nb = midForDir(n.id, -n.dx, -n.dz);
         linkNodes(na, nb, true);
       }
     }
@@ -4019,9 +4174,9 @@ function createPomeloMascot3D(THREE, scene, graph, animators) {
     const pB = graph.nodes[nextNode].p;
     root.position.lerpVectors(pA, pB, edgeProgress);
 
-    // 若走在跨島拱橋上，自動貼合拱橋弧度高度
+    // 走在紅磚創客步道上
     const isBridge = edge?.isBridge;
-    const archLift = isBridge ? Math.sin(edgeProgress * Math.PI) * 0.09 : 0;
+    const archLift = isBridge ? 0.005 : 0;
     root.position.y = TOP_Y + 0.02 + archLift;
 
     // 面向前進方向
@@ -4310,7 +4465,7 @@ function createElementaryStudents3D(THREE, scene, graph, trails, animators) {
       s.root.position.lerpVectors(pA, pB, s.progress);
 
       const isBridge = edge?.isBridge;
-      const archLift = isBridge ? Math.sin(s.progress * Math.PI) * 0.088 : 0;
+      const archLift = isBridge ? 0.005 : 0;
       s.root.position.y = TOP_Y + 0.02 + archLift;
 
       const dx = pB.x - pA.x, dz = pB.z - pA.z;
@@ -4333,17 +4488,286 @@ function createElementaryStudents3D(THREE, scene, graph, trails, animators) {
   return students;
 }
 
+// 建構「八里國小 2.4 公頃立體智慧創客校園」一體化大陸基座、中央紅土橢圓跑道、太陽能光電校舍群、校門斑馬線大道與底部創客巨型齒輪
+function buildUnifiedBaliCampusBase(THREE, scene, textures, glowMat, animators) {
+  const campusGroup = new THREE.Group();
+  scene.add(campusGroup);
+
+  // 1. 2.4 公頃圓角八邊形／菱形校園主台地 (Unified 2.4-Hectare Campus Continent)
+  const campusRx = 14.8, campusRz = 12.2;
+  const lawnTex = textures.lawn.clone();
+  lawnTex.repeat.set(9, 7.5);
+  lawnTex.needsUpdate = true;
+
+  const baseShape = new THREE.Shape();
+  const octPts = [
+    [-11.8, -11.4], [11.6, -11.4], [14.6, -7.2], [14.6, 8.2],
+    [11.4, 11.8], [-9.2, 11.8], [-14.2, 6.2], [-14.2, -7.6]
+  ];
+  baseShape.moveTo(octPts[0][0], octPts[0][1]);
+  for (let i = 1; i < octPts.length; i++) {
+    baseShape.lineTo(octPts[i][0], octPts[i][1]);
+  }
+  baseShape.closePath();
+
+  // 校園主草坪頂面 (y = TOP_Y - 0.028)
+  const topGeo = new THREE.ShapeGeometry(baseShape);
+  topGeo.rotateX(-Math.PI / 2);
+  const topMesh = new THREE.Mesh(
+    topGeo,
+    new THREE.MeshStandardMaterial({ map: lawnTex, color: 0xb7d197, roughness: 0.92 })
+  );
+  topMesh.position.y = TOP_Y - 0.028;
+  topMesh.receiveShadow = true;
+  campusGroup.add(topMesh);
+
+  // 校園外圍石材護欄路緣與立體岩土斷面 (Layered Terracotta Rock & Soil Cliff Base)
+  const cliffDepth = (TOP_Y - WATER_Y) + 0.55;
+  const extrudeSettings = { depth: cliffDepth, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.25, bevelThickness: 0.14 };
+  const cliffGeo = new THREE.ExtrudeGeometry(baseShape, extrudeSettings);
+  cliffGeo.rotateX(Math.PI / 2);
+  const cliffMat = new THREE.MeshStandardMaterial({ color: 0xb58d6b, roughness: 0.9, flatShading: true });
+  const cliffMesh = new THREE.Mesh(cliffGeo, cliffMat);
+  cliffMesh.position.y = TOP_Y - 0.04;
+  cliffMesh.castShadow = true;
+  cliffMesh.receiveShadow = true;
+  campusGroup.add(cliffMesh);
+
+  // 下層深色岩盤與海岸浪花淺灘
+  const lowerRock = new THREE.Mesh(
+    new THREE.CylinderGeometry(13.8, 11.2, 1.35, 16),
+    new THREE.MeshStandardMaterial({ color: 0x87674d, roughness: 0.94, flatShading: true })
+  );
+  lowerRock.scale.set(1.06, 1, 0.86);
+  lowerRock.position.set(0, WATER_Y - 0.45, 0.2);
+  campusGroup.add(lowerRock);
+
+  const shallowWater = new THREE.Mesh(
+    new THREE.CircleGeometry(16.6, 32),
+    new THREE.MeshBasicMaterial({ color: 0xb4dede, transparent: true, opacity: 0.48, depthWrite: false })
+  );
+  shallowWater.rotation.x = -Math.PI / 2;
+  shallowWater.scale.set(1.04, 0.86, 1);
+  shallowWater.position.set(0, WATER_Y + 0.008, 0.2);
+  campusGroup.add(shallowWater);
+
+  // 2. ★ 底部巨型旋轉「智慧創客機械齒輪組」（致敬 school-map.jpg 校園島底部的創客巨型齒輪！）
+  const gearMat = new THREE.MeshStandardMaterial({ color: 0xc99b42, metalness: 0.52, roughness: 0.42 });
+  const gearDarkMat = new THREE.MeshStandardMaterial({ color: 0x70582c, metalness: 0.45, roughness: 0.52 });
+  const gears = [];
+  const gearConfigs = [
+    { x: -7.5, y: WATER_Y + 0.06, z: 9.6, r: 2.3, teeth: 14, speed: 0.32, tiltZ: 0.22 },
+    { x: 6.8,  y: WATER_Y + 0.05, z: 9.8, r: 2.1, teeth: 12, speed: -0.38, tiltZ: -0.20 },
+    { x: -12.2, y: WATER_Y + 0.08, z: 2.5, r: 1.8, teeth: 12, speed: 0.42, tiltZ: 0.25 }
+  ];
+  for (const gc of gearConfigs) {
+    const gg = new THREE.Group();
+    gg.position.set(gc.x, gc.y, gc.z);
+    gg.rotation.z = gc.tiltZ;
+    gg.rotation.x = 0.18;
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(gc.r, 0.20, 8, 24), gearMat);
+    rim.rotation.x = Math.PI / 2;
+    const hub = new THREE.Mesh(new THREE.CylinderGeometry(gc.r * 0.36, gc.r * 0.36, 0.26, 14), gearDarkMat);
+    gg.add(rim, hub);
+    for (let s = 0; s < 4; s++) {
+      const spoke = new THREE.Mesh(new THREE.BoxGeometry(gc.r * 1.9, 0.14, 0.18), gearDarkMat);
+      spoke.rotation.y = (s * Math.PI) / 4;
+      gg.add(spoke);
+    }
+    for (let t = 0; t < gc.teeth; t++) {
+      const ang = (t / gc.teeth) * Math.PI * 2;
+      const tooth = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.22, 0.36), gearMat);
+      tooth.position.set(Math.cos(ang) * (gc.r + 0.18), 0, Math.sin(ang) * (gc.r + 0.18));
+      tooth.rotation.y = -ang;
+      gg.add(tooth);
+    }
+    campusGroup.add(gg);
+    gears.push({ mesh: gg, speed: gc.speed });
+  }
+  animators.push((dt) => {
+    for (const g of gears) g.mesh.rotation.y += dt * g.speed;
+  });
+
+  // 3. ★ 中央 200 公尺紅土橢圓跑道與雙綜合球場（忠實還原 school-map.jpg 中央紅土操場！）
+  const trackGroup = new THREE.Group();
+  trackGroup.position.set(1.6, TOP_Y - 0.018, -1.3);
+  trackGroup.rotation.y = -0.16;
+  campusGroup.add(trackGroup);
+
+  // 紅土橢圓跑道底層
+  const trackOuter = new THREE.Mesh(
+    new THREE.CircleGeometry(5.2, 40),
+    new THREE.MeshStandardMaterial({ color: 0xc96e50, roughness: 0.86 })
+  );
+  trackOuter.rotation.x = -Math.PI / 2;
+  trackOuter.scale.set(1.22, 0.78, 1);
+  trackOuter.receiveShadow = true;
+  trackGroup.add(trackOuter);
+
+  // 跑道白色分道線 (3 圈橢圓白線)
+  const laneLineMat = new THREE.MeshBasicMaterial({ color: 0xfbf8f3, side: THREE.DoubleSide });
+  for (const rLane of [4.95, 4.45, 3.95]) {
+    const ring = new THREE.Mesh(new THREE.RingGeometry(rLane - 0.03, rLane + 0.03, 48), laneLineMat);
+    ring.rotation.x = -Math.PI / 2;
+    ring.scale.set(1.22, 0.78, 1);
+    ring.position.y = 0.004;
+    trackGroup.add(ring);
+  }
+
+  // 操場中央雙綜合球場（藍灰壓克力鋪面與白色球場邊線）
+  const innerCourt = new THREE.Mesh(
+    new THREE.PlaneGeometry(6.2, 3.6),
+    new THREE.MeshStandardMaterial({ color: 0x6f7b85, roughness: 0.82 })
+  );
+  innerCourt.rotation.x = -Math.PI / 2;
+  innerCourt.position.y = 0.006;
+  innerCourt.receiveShadow = true;
+  trackGroup.add(innerCourt);
+
+  for (const cxOff of [-1.45, 1.45]) {
+    const cBorder = new THREE.Mesh(new THREE.RingGeometry(1.05, 1.09, 4), laneLineMat);
+    cBorder.rotation.x = -Math.PI / 2;
+    cBorder.rotation.z = Math.PI / 4;
+    cBorder.scale.set(1.1, 1.4, 1);
+    cBorder.position.set(cxOff, 0.01, 0);
+    trackGroup.add(cBorder);
+  }
+
+  // 4. ★ 校門前庭柏油馬路、黃網線與斑馬線（還原 school-map.jpg 左下角校門道路！）
+  const roadGroup = new THREE.Group();
+  roadGroup.position.set(-2.2, TOP_Y - 0.015, 10.35);
+  campusGroup.add(roadGroup);
+
+  const asphalt = new THREE.Mesh(
+    new THREE.PlaneGeometry(19.5, 1.55),
+    new THREE.MeshStandardMaterial({ color: 0x55585e, roughness: 0.88 })
+  );
+  asphalt.rotation.x = -Math.PI / 2;
+  asphalt.receiveShadow = true;
+  roadGroup.add(asphalt);
+
+  // 馬路雙白邊線與中央虛線
+  for (const zSide of [-0.68, 0.68]) {
+    const sideLine = new THREE.Mesh(new THREE.PlaneGeometry(19.2, 0.05), laneLineMat);
+    sideLine.rotation.x = -Math.PI / 2;
+    sideLine.position.set(0, 0.004, zSide);
+    roadGroup.add(sideLine);
+  }
+  for (let xDash = -8.5; xDash <= 8.5; xDash += 1.4) {
+    if (Math.abs(xDash + 4.8) < 1.8) continue;
+    const dash = new THREE.Mesh(new THREE.PlaneGeometry(0.65, 0.05), laneLineMat);
+    dash.rotation.x = -Math.PI / 2;
+    dash.position.set(xDash, 0.004, 0);
+    roadGroup.add(dash);
+  }
+  // 校門口黃網線與斑馬線
+  const yellowBox = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.5, 1.1),
+    new THREE.MeshBasicMaterial({ color: 0xe8b931, wireframe: true })
+  );
+  yellowBox.rotation.x = -Math.PI / 2;
+  yellowBox.position.set(-5.2, 0.006, 0);
+  roadGroup.add(yellowBox);
+
+  for (const xCross of [-3.2, 3.8]) {
+    for (let s = -0.52; s <= 0.52; s += 0.22) {
+      const stripe = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.11), laneLineMat);
+      stripe.rotation.x = -Math.PI / 2;
+      stripe.position.set(xCross, 0.005, s);
+      roadGroup.add(stripe);
+    }
+  }
+
+  // 5. ★ 八里國小標誌性「太陽能光電屋頂校舍建築群」與「觀音山麓生態綠林」（配置於校園外緣，襯托 14 座學道劇場）
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0xefe6d5, roughness: 0.78 });
+  const brickTrimMat = new THREE.MeshStandardMaterial({ color: 0xb85d47, roughness: 0.82 });
+  const roofMat = new THREE.MeshStandardMaterial({ color: 0xd5cec2, roughness: 0.75 });
+  const solarMat = new THREE.MeshStandardMaterial({ color: 0x2b4c7e, metalness: 0.38, roughness: 0.32 });
+  const winMat = new THREE.MeshStandardMaterial({ color: 0x5c768d, roughness: 0.4 });
+
+  function addSolarSchoolBuilding(bx, bz, w, d, h, rotY = 0) {
+    const bg = new THREE.Group();
+    bg.position.set(bx, TOP_Y - 0.02, bz);
+    bg.rotation.y = rotY;
+
+    const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wallMat);
+    body.position.y = h / 2;
+    body.castShadow = true;
+    body.receiveShadow = true;
+    bg.add(body);
+
+    const baseSkirt = new THREE.Mesh(new THREE.BoxGeometry(w + 0.06, 0.26, d + 0.06), brickTrimMat);
+    baseSkirt.position.y = 0.13;
+    bg.add(baseSkirt);
+
+    const roof = new THREE.Mesh(new THREE.BoxGeometry(w + 0.14, 0.10, d + 0.14), roofMat);
+    roof.position.y = h + 0.05;
+    bg.add(roof);
+
+    // 屋頂太陽能光電板陣列 (Solar PV Array on Roof)
+    const panelCols = Math.max(2, Math.floor(w / 0.85));
+    for (let c = 0; c < panelCols; c++) {
+      const px = -w * 0.42 + (c / Math.max(1, panelCols - 1)) * (w * 0.84);
+      const pv = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.04, d * 0.72), solarMat);
+      pv.position.set(px, h + 0.13, 0);
+      pv.rotation.x = 0.08;
+      bg.add(pv);
+    }
+
+    // 教室窗戶帶
+    const floors = Math.max(2, Math.round(h / 0.42));
+    for (let f = 0; f < floors; f++) {
+      const wy = 0.32 + f * 0.38;
+      if (wy < h - 0.15) {
+        const winFront = new THREE.Mesh(new THREE.BoxGeometry(w * 0.88, 0.16, d + 0.03), winMat);
+        winFront.position.y = wy;
+        bg.add(winFront);
+      }
+    }
+    campusGroup.add(bg);
+  }
+
+  // 西北側 L 型太陽能校舍、東側高層太陽能教學樓、西南側教學長廊
+  addSolarSchoolBuilding(-11.2, -9.8, 4.6, 1.35, 1.25, 0.08);
+  addSolarSchoolBuilding(-12.8, -5.2, 1.35, 4.4, 1.20, 0.05);
+  addSolarSchoolBuilding(12.9, 1.2, 1.55, 5.2, 1.68, -0.06);
+  addSolarSchoolBuilding(-12.5, 4.2, 1.30, 4.2, 1.15, 0.12);
+
+  // 東北側校園生態森林與文旦柚綠林區
+  const treeCrownMat1 = new THREE.MeshStandardMaterial({ color: 0x5c8a47, roughness: 0.86, flatShading: true });
+  const treeCrownMat2 = new THREE.MeshStandardMaterial({ color: 0x76a058, roughness: 0.86, flatShading: true });
+  const trunkMat = new THREE.MeshStandardMaterial({ color: 0x6e5036, roughness: 0.9 });
+  const treeSpots = [
+    [5.8, -10.2, 1.1], [7.2, -10.5, 1.25], [8.8, -10.3, 1.0], [10.4, -10.4, 1.2],
+    [12.4, -9.6, 1.15], [13.2, -4.2, 1.05], [-1.2, -10.4, 1.15], [1.8, -10.5, 1.0],
+    [-12.6, 8.4, 1.1], [-8.8, 9.4, 0.95], [4.8, 9.5, 1.05], [13.2, 6.2, 1.1]
+  ];
+  for (let i = 0; i < treeSpots.length; i++) {
+    const [tx, tz, sc] = treeSpots[i];
+    const tg = new THREE.Group();
+    tg.position.set(tx, TOP_Y - 0.02, tz);
+    tg.scale.setScalar(sc);
+    const trk = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 0.45, 7), trunkMat);
+    trk.position.y = 0.22;
+    const crn = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.46, 1),
+      i % 2 === 0 ? treeCrownMat1 : treeCrownMat2
+    );
+    crn.position.y = 0.58;
+    crn.scale.set(1.1, 0.88, 1.1);
+    crn.castShadow = true;
+    tg.add(trk, crn);
+    campusGroup.add(tg);
+  }
+
+  return campusGroup;
+}
+
 function buildArchipelago(THREE, scene, trails, kit, animators) {
-  const centers = new Map();
-  const axialMap = new Map();
+  // ★ 使用試算表真實 (X, Y) 校園座標轉換為 2.4 公頃 3D 校園座標
+  const centers = computeCampusCenters(THREE, trails, TOP_Y);
   const islandViews = new Map();
   const pickables = [];
-
-  for (const t of trails) {
-    const c = axialToWorld(THREE, t.axial[0], t.axial[1]);
-    centers.set(t.id, c);
-    axialMap.set(t.axial.join(","), t);
-  }
 
   const textures = {};
   const topMats = {};
@@ -4352,7 +4776,9 @@ function buildArchipelago(THREE, scene, trails, kit, animators) {
     topMats[type] = new THREE.MeshStandardMaterial({ map: textures[type], roughness: 0.9 });
   }
 
-  const cliffMat = new THREE.MeshLambertMaterial({ vertexColors: true });
+  // ★ 建立一體成型的「2.4 公頃八里國小立體智慧創客校園」大陸底座、紅土跑道、太陽能校舍與底部創客齒輪
+  buildUnifiedBaliCampusBase(THREE, scene, textures, kit.glowMat, animators);
+
   const ringMat = new THREE.MeshStandardMaterial({
     map: textures.ringtile,
     roughness: 0.88,
@@ -4362,20 +4788,52 @@ function buildArchipelago(THREE, scene, trails, kit, animators) {
     polygonOffsetUnits: -2
   });
   const curbMat = new THREE.MeshStandardMaterial({
-    color: 0xe2d4c0,
-    roughness: 0.82,
+    color: 0xd9a84e,
+    metalness: 0.35,
+    roughness: 0.55,
     polygonOffset: true,
     polygonOffsetFactor: -2,
     polygonOffsetUnits: -4
   });
-  const foamMat = new THREE.MeshBasicMaterial({
-    color: 0xf7fcfb,
-    transparent: true,
-    opacity: 0.58,
-    depthWrite: false
+  const padBaseMat = new THREE.MeshStandardMaterial({
+    color: 0xc87a58,
+    roughness: 0.85
+  });
+  const chipPinMat = new THREE.MeshStandardMaterial({
+    color: 0xe5b84b,
+    metalness: 0.55,
+    roughness: 0.38
   });
 
+  // 計算校園內相鄰學道據點的步道連線（每個據點連接最近的 3 個鄰近據點，形成全校連通步道網）
   const neighbors = new Map();
+  for (const t of trails) neighbors.set(t.id, []);
+  const edgeSet = new Set();
+  for (let i = 0; i < trails.length; i++) {
+    const tA = trails[i];
+    const cA = centers.get(tA.id);
+    const dists = [];
+    for (let j = 0; j < trails.length; j++) {
+      if (i === j) continue;
+      const tB = trails[j];
+      const cB = centers.get(tB.id);
+      dists.push({ j, tB, d: cA.distanceTo(cB) });
+    }
+    dists.sort((a, b) => a.d - b.d);
+    for (const item of dists.slice(0, 3)) {
+      if (item.d < 9.5) {
+        const key = [tA.id, item.tB.id].sort().join("|");
+        if (!edgeSet.has(key)) {
+          edgeSet.add(key);
+          const cB = centers.get(item.tB.id);
+          const dx = (cB.x - cA.x) / item.d;
+          const dz = (cB.z - cA.z) / item.d;
+          neighbors.get(tA.id).push({ id: item.tB.id, dx, dz });
+          neighbors.get(item.tB.id).push({ id: tA.id, dx: -dx, dz: -dz });
+        }
+      }
+    }
+  }
 
   for (const t of trails) {
     const c = centers.get(t.id);
@@ -4384,7 +4842,7 @@ function buildArchipelago(THREE, scene, trails, kit, animators) {
     scene.add(group);
     kit.setIslandGroup(t.id, group);
 
-    // 六角島頂面
+    // 智慧創客晶片模組基座頂面 (Smart-Maker Chip Module Pad on Campus)
     const topGeo = new THREE.CircleGeometry(R_HEX - 0.04, 6);
     topGeo.rotateZ(Math.PI / 6);
     topGeo.rotateX(-Math.PI / 2);
@@ -4399,39 +4857,39 @@ function buildArchipelago(THREE, scene, trails, kit, animators) {
     group.add(topMesh);
     pickables.push(topMesh);
 
-    // 環島步道與路緣
-    const ring = new THREE.Mesh(hexRingGeometry(THREE, RING_R + 0.14, RING_R - 0.14), ringMat.clone());
+    // 據點環形步道與金色晶片外框
+    const ring = new THREE.Mesh(hexRingGeometry(THREE, RING_R + 0.12, RING_R - 0.12), ringMat.clone());
     ring.position.set(c.x, TOP_Y + 0.012, c.z);
     ring.receiveShadow = true;
     group.add(ring);
 
-    const curb = new THREE.Mesh(hexRingGeometry(THREE, R_HEX, R_HEX - 0.07), curbMat);
-    curb.position.set(c.x, TOP_Y + 0.035, c.z);
+    const curb = new THREE.Mesh(hexRingGeometry(THREE, R_HEX, R_HEX - 0.065), curbMat);
+    curb.position.set(c.x, TOP_Y + 0.025, c.z);
     group.add(curb);
 
-    // 島嶼岩壁與淺水環
-    const cliff = new THREE.Mesh(cliffGeometry(THREE, c.x, c.z, R_HEX, TOP_Y + 0.03, WATER_Y - 0.48, t.poleColor), cliffMat);
-    cliff.castShadow = true;
-    cliff.receiveShadow = true;
-    cliff.userData = { type: "island", id: t.id };
-    group.add(cliff);
-    pickables.push(cliff);
-
-    const shallow = new THREE.Mesh(
-      hexRingGeometry(THREE, R_HEX + 0.65, R_HEX - 0.02),
-      new THREE.MeshBasicMaterial({ color: 0xb4dede, transparent: true, opacity: 0.52, depthWrite: false })
+    // 低矮紅磚與智慧晶片基座台階（嵌入 2.4 公頃校園地面，並加上 6 側金色晶片接腳）
+    const padStep = new THREE.Mesh(
+      new THREE.CylinderGeometry(R_HEX + 0.04, R_HEX + 0.10, 0.06, 6),
+      padBaseMat
     );
-    shallow.position.set(c.x, WATER_Y + 0.008, c.z);
-    scene.add(shallow);
+    padStep.rotation.y = Math.PI / 6;
+    padStep.position.set(c.x, TOP_Y - 0.01, c.z);
+    padStep.userData = { type: "island", id: t.id };
+    group.add(padStep);
+    pickables.push(padStep);
 
-    const foam = new THREE.Mesh(hexRingGeometry(THREE, R_HEX + 0.15, R_HEX - 0.02), foamMat);
-    foam.position.set(c.x, WATER_Y + 0.014, c.z);
-    scene.add(foam);
+    for (let k = 0; k < 6; k++) {
+      const a = (k * Math.PI) / 3;
+      const pin = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.03, 0.09), chipPinMat);
+      pin.position.set(c.x + Math.cos(a) * (R_HEX + 0.06), TOP_Y + 0.005, c.z + Math.sin(a) * (R_HEX + 0.06));
+      pin.rotation.y = -a;
+      group.add(pin);
+    }
 
     // 選取高亮外框
     const pts = Array.from({ length: 7 }, (_, k) => {
-      const [vx, vz] = hexVertex(c.x, c.z, R_HEX + 0.02, k);
-      return new THREE.Vector3(vx, TOP_Y + 0.07, vz);
+      const [vx, vz] = hexVertex(c.x, c.z, R_HEX + 0.04, k);
+      return new THREE.Vector3(vx, TOP_Y + 0.06, vz);
     });
     const outline = new THREE.Line(
       new THREE.BufferGeometry().setFromPoints(pts),
@@ -4440,20 +4898,13 @@ function buildArchipelago(THREE, scene, trails, kit, animators) {
     outline.visible = false;
     scene.add(outline);
 
-    // 建構島上 3D 主題場景
+    // 建構該學道據點的 3D 動態教學場景 (Diorama)
     buildIslandDiorama(THREE, kit, t, c, animators);
 
-    // 記錄相鄰島嶼
-    const nb = [];
-    for (const [dq, dr] of HEX_NEIGHBORS) {
-      const nTrail = axialMap.get(`${t.axial[0] + dq},${t.axial[1] + dr}`);
-      if (nTrail) nb.push({ id: nTrail.id, dq, dr });
-    }
-    neighbors.set(t.id, nb);
-    islandViews.set(t.id, { group, topMesh, cliff, outline, trail: t, center: c });
+    islandViews.set(t.id, { group, topMesh, cliff: padStep, outline, trail: t, center: c });
   }
 
-  // 建立相鄰島嶼之間的 3D 拱橋
+  // ★ 建立校園地面「紅磚步道 ＋ 智慧創客晶片金色電路光軌」連接各學道據點
   kit.setIslandGroup(null, scene);
   const bridges = [];
   const seenBridge = new Set();
@@ -4463,30 +4914,27 @@ function buildArchipelago(THREE, scene, trails, kit, animators) {
       if (seenBridge.has(key)) continue;
       seenBridge.add(key);
       const a = centers.get(id), b = centers.get(n.id);
-      const [dx, dz] = dirOf(n.dq, n.dr);
-      const ri = RING_R * 0.8660254;
-      const pa = new THREE.Vector3(a.x + dx * ri, TOP_Y, a.z + dz * ri);
-      const pb = new THREE.Vector3(b.x - dx * ri, TOP_Y, b.z - dz * ri);
+      const ri = RING_R * 0.88;
+      const pa = new THREE.Vector3(a.x + n.dx * ri, TOP_Y, a.z + n.dz * ri);
+      const pb = new THREE.Vector3(b.x - n.dx * ri, TOP_Y, b.z - n.dz * ri);
       bridges.push({ a: id, b: n.id, pa, pb });
 
       const len = pa.distanceTo(pb);
-      const yaw = Math.atan2(dx, dz);
-      for (let s = 0; s <= 6; s++) {
-        const u = s / 6;
-        const pnt = pa.clone().lerp(pb, u);
-        const arch = Math.sin(u * Math.PI) * 0.085;
-        const tilt = Math.cos(u * Math.PI) * -0.16;
-        kit.addPart("box", [pnt.x, TOP_Y + 0.03 + arch, pnt.z], [0.28, 0.035, len / 7 + 0.015], s % 2 ? 0xc89d7c : 0xb58969, [tilt, yaw, 0]);
-      }
-      for (const side of [-1, 1]) {
-        const ox = Math.cos(yaw) * 0.14 * side, oz = -Math.sin(yaw) * 0.14 * side;
+      if (len > 0.1) {
         const mid = pa.clone().lerp(pb, 0.5);
-        kit.addPart("box", [mid.x + ox, TOP_Y + 0.16, mid.z + oz], [0.022, 0.025, len], 0xf5ece0, [0, yaw, 0]);
+        const yaw = Math.atan2(n.dx, n.dz);
+        // 紅磚校園步道主體
+        kit.addPart("box", [mid.x, TOP_Y - 0.008, mid.z], [0.26, 0.022, len], 0xc47258, [0, yaw, 0]);
+        // 步道兩側智慧創客晶片金色發光電路軌
+        for (const side of [-1, 1]) {
+          const ox = Math.cos(yaw) * 0.145 * side, oz = -Math.sin(yaw) * 0.145 * side;
+          kit.addPart("box", [mid.x + ox, TOP_Y + 0.002, mid.z + oz], [0.026, 0.024, len], 0xe2b449, [0, yaw, 0]);
+        }
       }
     }
   }
 
-  // ★ 建立跨島行人路網、主角「八里柚寶 3D 玩偶」與「28 位各具特色的小學生 3D 玩偶」
+  // ★ 建立全校行人路網、主角「八里柚寶 3D 玩偶」與「28 位各具特色的小學生 3D 玩偶」
   const pedGraph = buildPedestrianGraph(THREE, trails, centers, neighbors);
   const mascotHero = createPomeloMascot3D(THREE, scene, pedGraph, animators);
   createElementaryStudents3D(THREE, scene, pedGraph, trails, animators);
@@ -4573,10 +5021,10 @@ async function initBaliIslandsApp(initialLabels) {
     mascotInfoImg.src = MAIMROLE_DATA_URI;
   }
 
-  // 更新總島嶼數顯示
+  // 更新總學道數顯示
   if ($("#hero-island-count")) $("#hero-island-count").textContent = trails.length;
-  $("#side-count-text").textContent = `${trails.length} 條學習步道 × 4 大核心素養`;
-  $("#tab-trails").textContent = `學習步道 (${trails.length})`;
+  $("#side-count-text").textContent = `${trails.length} 條學習學道 × 素養四道 × 學識六能`;
+  $("#tab-trails").textContent = `學習學道 (${trails.length})`;
   $("#tab-flows").textContent = `跨域連結 (${DEFAULT_FLOWS.length})`;
 
   const stage = $("#stage");
@@ -4884,11 +5332,11 @@ async function initBaliIslandsApp(initialLabels) {
       startCameraFlight(center.clone().add(offset), center.clone().add(new THREE.Vector3(0, 0.35, 0)), 0.88);
     }
 
-    // 找出相關聯的跨島連結
+    // 找出相關聯的跨域學道連結
     const relFlows = DEFAULT_FLOWS.filter(f => trails[f.from]?.id === id || trails[f.to]?.id === id);
     const baliBadges = trail.bali.map(code => {
       const p = BALI_PILLARS[code];
-      return p ? `<span class="card-badge" style="background:${p.color}">${p.name}(${p.en})</span>` : "";
+      return p ? `<span class="card-badge" style="background:${p.color}">${p.name}</span>` : "";
     }).join("");
 
     const highlightsHtml = trail.highlights.map((h, i) => `
@@ -4899,7 +5347,7 @@ async function initBaliIslandsApp(initialLabels) {
     `).join("");
 
     const relHtml = relFlows.length ? `
-      <div class="card-sec-title">CONNECTED TRAILS / 跨域關聯步道</div>
+      <div class="card-sec-title">CONNECTED TRAILS / 跨域關聯學道</div>
       <div class="rel-chips">
         ${relFlows.map(f => {
           const otherIdx = trails[f.from]?.id === id ? f.to : f.from;
@@ -4912,16 +5360,16 @@ async function initBaliIslandsApp(initialLabels) {
 
     $("#card-content").innerHTML = `
       <div class="card-eyebrow">
-        <span class="card-badge" style="background:${trail.poleColor}">ISLAND ${trail.numStr}</span>
+        <span class="card-badge" style="background:${trail.poleColor}">學道 ${trail.numStr}｜座標 (${trail.sheetX}, ${trail.sheetY})</span>
         ${baliBadges}
       </div>
       <h3>${trail.text}</h3>
       <p class="card-desc">${trail.summary}</p>
-      <div class="card-sec-title">COURSE HIGHLIGHTS / 步道課程亮點</div>
+      <div class="card-sec-title">COURSE HIGHLIGHTS / 學道課程亮點</div>
       <div class="highlight-list">${highlightsHtml}</div>
       ${relHtml}
       <a class="visit-cta" href="${trail.url}" target="${trail.target}" rel="noopener">
-        <span>🚀 前往「${trail.text}」步道網站</span>
+        <span>🚀 前往「${trail.text}」學道網站</span>
         <span>↗</span>
       </a>
     `;
@@ -5038,11 +5486,11 @@ async function initBaliIslandsApp(initialLabels) {
         <div class="tree-item-head">
           <span class="tree-num" style="border-left: 3px solid ${t.poleColor}">${t.numStr}</span>
           <span class="tree-title">${t.text}</span>
-          <span class="tree-tag">${t.bali.join("·")}</span>
+          <span class="tree-tag">${t.bali.map(c => BALI_PILLARS[c]?.code || c).join("·")}</span>
         </div>
         <div class="tree-sub">${t.summary}</div>
       </div>
-    `).join("") || `<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">找不到符合條件的學習步道</div>`;
+    `).join("") || `<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">找不到符合條件的學習學道</div>`;
 
     $$("#tree-list [data-island-id]").forEach(el => {
       el.addEventListener("click", () => {
@@ -5069,12 +5517,12 @@ async function initBaliIslandsApp(initialLabels) {
     });
   }
 
-  // 建立底部「02 四大色系群組」與「03 B.A.L.I. 新育四力」篩選按鈕
+  // 建立底部「02 行・素養四道」與「03 處室色系分類」篩選按鈕
   const colorGroups = [
-    { color: "#A94B5C", label: "酒紅系｜體能・防災・品格・綠動 (5)" },
-    { color: "#8A7A2F", label: "暖金系｜多元・國際・紅磚・創客 (4)" },
-    { color: "#356B73", label: "青藍系｜情緒・慈孝・模型・共融 (4)" },
-    { color: "#2F6B45", label: "森綠系｜MV 影音實驗室 (1)" }
+    { color: "#A94B5C", label: "酒紅處室群組｜體能・防災・品格・綠動 (5)" },
+    { color: "#8A7A2F", label: "暖金處室群組｜多元・國際・紅磚・創客 (4)" },
+    { color: "#356B73", label: "青藍處室群組｜情緒・慈孝・模型・共融 (4)" },
+    { color: "#2F6B45", label: "森綠處室群組｜MV 影音實驗室 (1)" }
   ];
   $("#color-buttons").innerHTML = `
     <button type="button" class="active" data-col="">全部顯示 (${trails.length})</button>
@@ -5096,7 +5544,7 @@ async function initBaliIslandsApp(initialLabels) {
   $("#bali-buttons").innerHTML = Object.values(BALI_PILLARS).map(p => `
     <button type="button" data-bali="${p.id}" title="${p.desc}">
       <span class="pill-dot" style="background:${p.color}"></span>
-      <span>${p.name}(${p.en})</span>
+      <span>${p.name}（${p.en}）</span>
     </button>
   `).join("") + `<button type="button" id="bali-clear">清除篩選</button>`;
 
@@ -5133,13 +5581,13 @@ async function initBaliIslandsApp(initialLabels) {
     $("#day-slider").value = dayMinutes;
     env.setTimeOfDay(dayMinutes, kit.glowMat);
 
-    let note = "☀️ 正午陽光灑落八里校園與十三行海岸，遠方淡江大橋與 14 座學習步道島嶼充滿蓬勃朝氣。";
+    let note = "☀️ 正午陽光灑落八里 2.4 公頃智慧創客校園與十三行海岸，遠方淡江大橋與 14 條學習學道充滿蓬勃朝氣。";
     if (dayMinutes < 330 || dayMinutes >= 1200) {
-      note = "🌙 夜幕低垂，星空下的淡江大橋點亮璀璨光雕，八里群島燈塔與舞台熠熠生輝。";
+      note = "🌙 夜幕低垂，星空下的淡江大橋點亮璀璨光雕，八里智慧校園金銅電路步道與燈塔熠熠生輝。";
     } else if (dayMinutes < 480) {
-      note = "🌅 晨曦微露，淡水河口與觀音山漸漸甦醒，八里柚寶與小學生們開始在步道晨練。";
+      note = "🌅 晨曦微露，淡水河口與觀音山漸漸甦醒，八里柚寶與小學生們開始在紅磚校園步道晨練。";
     } else if (dayMinutes >= 1020) {
-      note = "🌇 夕陽西下，淡江大橋單塔映照著迷人的金橘色晚霞，島嶼間亮起溫馨路燈。";
+      note = "🌇 夕陽西下，淡江大橋單塔映照著迷人的金橘色晚霞，2.4 公頃智慧校園亮起溫馨路燈。";
     }
     $("#day-note").textContent = note;
   }
@@ -5187,6 +5635,31 @@ async function initBaliIslandsApp(initialLabels) {
   $("#help-close").addEventListener("click", () => {
     $("#help-modal").hidden = true;
   });
+
+  // 🗺️ 校園立體底圖與 (X, Y) 座標對照視窗
+  if ($("#map2d-pins")) {
+    $("#map2d-pins").innerHTML = trails.map(t => {
+      const leftPct = ((t.sheetX || 931) / 1862 * 100).toFixed(2);
+      const topPct = ((t.sheetY || 536) / 1072 * 100).toFixed(2);
+      return `<button type="button" class="map2d-pin" data-map-id="${t.id}" style="left:${leftPct}%;top:${topPct}%;--pin-color:${t.poleColor}" title="點擊飛往 3D 場景：${t.numStr} ${t.text} (${t.sheetX}, ${t.sheetY})"><strong>${t.numStr}</strong><span>${t.text}</span></button>`;
+    }).join("");
+    $$("#map2d-pins [data-map-id]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if ($("#map2d-modal")) $("#map2d-modal").hidden = true;
+        selectIsland(btn.dataset.mapId, true);
+      });
+    });
+  }
+  if ($("#btn-map2d") && $("#map2d-modal")) {
+    $("#btn-map2d").addEventListener("click", () => {
+      $("#map2d-modal").hidden = false;
+    });
+  }
+  if ($("#map2d-close") && $("#map2d-modal")) {
+    $("#map2d-close").addEventListener("click", () => {
+      $("#map2d-modal").hidden = true;
+    });
+  }
   $("#search-input").addEventListener("input", updateFilterVisuals);
 
   $("#tab-trails").addEventListener("click", () => {
